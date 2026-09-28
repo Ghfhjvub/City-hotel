@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فندق المدينة - بورتسودان | نظام الحجوزات الذكي والتواصل المباشر</title>
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0b132b;
+            --bg-secondary: #1c2541;
+            --card-bg: rgba(28, 37, 65, 0.85);
+            --gold-primary: #d4af37;
+            --gold-hover: #f39c12;
+            --text-light: #f8f9fa;
+            --text-muted: #a0aec0;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f1c40f;
+            --info: #3498db;
+            --whatsapp-color: #25D366;
+            --border: rgba(212, 175, 55, 0.3);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --backdrop-blur: blur(16px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(28, 37, 65, 0.95) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-light);
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        .app-header {
+            background: rgba(11, 19, 43, 0.9);
+            backdrop-filter: var(--backdrop-blur);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--gold-primary);
+        }
+
+        .brand-logo i {
+            font-size: 1.8rem;
+        }
+
+        .brand-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.12);
+            border-color: var(--border);
+        }
+
+        /* Mobile Bottom Nav */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(11, 19, 43, 0.95);
+            backdrop-filter: var(--backdrop-blur);
+            border-top: 1px solid var(--border);
+            padding: 10px 15px;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+
+        .mobile-nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .mobile-nav-btn i {
+            font-size: 1.2rem;
+        }
+
+        .mobile-nav-btn.active {
+            color: var(--gold-primary);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            text-align: center;
+            padding: 35px 20px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(28, 37, 65, 0.85));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            color: var(--gold-primary);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+            gap: 20px;
+        }
+
+        .room-card {
+            background: rgba(11, 19, 43, 0.7);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+        }
+
+        .room-header {
+            background: rgba(212, 175, 55, 0.12);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .room-number {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--gold-primary);
+        }
+
+        .room-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .room-body {
+            padding: 15px;
+            flex-grow: 1;
+        }
+
+        .room-type {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .status-box {
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .status-future {
+            background: rgba(52, 152, 219, 0.15);
+            border: 1px solid var(--info);
+            color: #aed6f1;
+        }
+
+        .status-occupied {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid var(--danger);
+            color: #f5b7b1;
+        }
+
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+
+        .room-features span {
+            background: rgba(255,255,255,0.06);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-hover));
+            color: #000;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            opacity: 0.92;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn-email {
+            background: linear-gradient(135deg, #ea4335, #c5221f);
+            color: #fff;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(11, 19, 43, 0.85);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-light);
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-available { background: rgba(46, 204, 113, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-booked { background: rgba(231, 76, 60, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .badge-pending { background: rgba(241, 196, 15, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        th {
+            color: var(--gold-primary);
+            background: rgba(11, 19, 43, 0.6);
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(11, 19, 43, 0.65);
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Modal Overlays */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 520px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            animation: zoomIn 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav { display: none; }
+            .mobile-nav { display: flex; }
+            body { padding-bottom: 85px; }
+            .hero-title { font-size: 1.6rem; }
+            .container { margin: 15px auto; padding: 0 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="#" class="brand-logo">
+            <i class="fa-solid fa-hotel"></i>
+            <div>
+                <span class="brand-title">فندق المدينة</span>
+                <span class="brand-sub"><i class="fa-solid fa-location-dot"></i> بورتسودان - السودان</span>
+            </div>
+        </a>
+        <nav class="desktop-nav">
+            <button class="nav-btn active" onclick="switchTab('bookingView')">
+                <i class="fa-solid fa-bed"></i> الغرف والأجنحة
+            </button>
+            <button class="nav-btn" onclick="switchTab('myBookingsView')">
+                <i class="fa-solid fa-receipt"></i> متابعة حجز
+            </button>
+            <button class="nav-btn" onclick="openAdminModal()">
+                <i class="fa-solid fa-user-shield"></i> لوحة المدير
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Bar -->
+    <nav class="mobile-nav">
+        <button class="mobile-nav-btn active" id="mob-bookingView" onclick="switchTab('bookingView')">
+            <i class="fa-solid fa-bed"></i>
+            <span>الغرف</span>
+        </button>
+        <button class="mobile-nav-btn" id="mob-myBookingsView" onclick="switchTab('myBookingsView')">
+            <i class="fa-solid fa-receipt"></i>
+            <span>حجوزاتي</span>
+        </button>
+        <button class="mobile-nav-btn" id="mob-adminView" onclick="openAdminModal()">
+            <i class="fa-solid fa-lock"></i>
+            <span>الإدارة</span>
+        </button>
+    </nav>
+
+    <main class="container">
+
+        <!-- 1. Guest View - Doubled Rooms & Suites -->
+        <section id="bookingView" class="view-section active">
+            <div class="hero-banner">
+                <h1 class="hero-title">أهلاً بك في فندق المدينة - بورتسودان</h1>
+                <p class="hero-desc">استمتع بضيافة فاخرة وإطلالة ساحرة. احجز إقامتك أونلاين وأرسل الحجز بضغطة زر إلى إدارة الفندق مباشرة.</p>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title"><i class="fa-solid fa-door-open"></i> قائمة الغرف والأجنحة (16 غرفة وجناح)</h2>
+            </div>
+
+            <div class="rooms-grid" id="roomsContainer">
+                <!-- Rooms generated dynamically -->
+            </div>
+        </section>
+
+        <!-- 2. Guest View - Booking Status Search -->
+        <section id="myBookingsView" class="view-section">
+            <div class="glass-card">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fa-solid fa-magnifying-glass"></i> الاستعلام عن تفاصيل حجزك</h2>
+                </div>
+                <div class="form-group">
+                    <label>أدخل رقم هاتفك المسجل لمتابعة حجزك:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="searchPhoneInput" class="form-control" placeholder="مثال: 0912345678">
+                        <button class="btn" style="width: 120px;" onclick="searchGuestBookings()">بحث</button>
+                    </div>
+                </div>
+                <div class="table-responsive" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>رقم الحجز</th>
+                                <th>الغرفة</th>
+                                <th>الوصول</th>
+                                <th>المغادرة</th>
+                                <th>المبلغ</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestBookingsTable">
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">أدخل رقم الهاتف للبحث عن بياناتك</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Admin Panel Section -->
+        <section id="adminView" class="view-section">
+            <div class="glass-card">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fa-solid fa-chart-pie"></i> لوحة تحكم وإدارة فندق المدينة</h2>
+                    <button class="btn btn-secondary" style="width: auto; padding: 8px 15px;" onclick="switchTab('bookingView')">
+                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج
+                    </button>
+                </div>
+
+                <!-- Hotel Config Settings -->
+                <div style="background: rgba(11, 19, 43, 0.6); border: 1px solid var(--border); padding: 18px; border-radius: var(--radius-md); margin-bottom: 25px;">
+                    <h3 style="color: var(--gold-primary); font-size: 1.05rem; margin-bottom: 12px;"><i class="fa-solid fa-gear"></i> إعدادات التواصل المباشر مع مدير الفندق</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                        <div class="form-group" style="margin: 0;">
+                            <label>البريد الإلكتروني للمدير:</label>
+                            <input type="email" id="configEmail" class="form-control" value="manager@cityhotel-portsudan.com">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label>رقم واتساب المدير (بالرمز الدولي):</label>
+                            <input type="text" id="configWhatsapp" class="form-control" value="249912345678">
+                        </div>
+                    </div>
+                    <button class="btn" style="width: auto; margin-top: 12px; padding: 8px 20px;" onclick="saveHotelSettings()">حفظ إعدادات التواصل</button>
+                </div>
+
+                <!-- Admin Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                        <div>
+                            <div class="stat-value" id="statPending">0</div>
+                            <div class="stat-label">طلبات بانتظار التأكيد</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div>
+                            <div class="stat-value" id="statConfirmed">0</div>
+                            <div class="stat-label">حجوزات مؤكدة</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                        <div>
+                            <div class="stat-value" id="statRevenue">0 $</div>
+                            <div class="stat-label">إجمالي الإيرادات المؤكدة</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Bookings Management Table -->
+                <div class="section-header" style="margin-top: 20px;">
+                    <h2 class="section-title"><i class="fa-solid fa-list-check"></i> إدارة طلبات الحجوزات والنزلاء</h2>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم النزيل</th>
+                                <th>الهاتف</th>
+                                <th>الغرفة</th>
+                                <th>فترة الإقامة</th>
+                                <th>المبلغ</th>
+                                <th>الحالة</th>
+                                <th>إجراءات المدير</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBookingsTable">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Data Backup & Restore -->
+                <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" style="width: auto;" onclick="exportData()">
+                        <i class="fa-solid fa-download"></i> تصدير النسخة الاحتياطية (JSON)
+                    </button>
+                    <button class="btn btn-secondary" style="width: auto;" onclick="document.getElementById('fileInput').click()">
+                        <i class="fa-solid fa-upload"></i> استرجاع البيانات
+                    </button>
+                    <input type="file" id="fileInput" style="display: none;" onchange="importData(event)">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="section-header">
+                <h3 class="section-title" id="modalRoomTitle">حجز الغرفة</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('bookingModal')"></i>
+            </div>
+            <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+                <input type="hidden" id="modalRoomId">
+                <div class="form-group">
+                    <label>اسم النزيل الرباعي:</label>
+                    <input type="text" id="guestName" class="form-control" required placeholder="أدخل الاسم الكامل">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف للاتصال:</label>
+                    <input type="tel" id="guestPhone" class="form-control" required placeholder="0912345678">
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label>تاريخ الوصول:</label>
+                        <input type="date" id="checkIn" class="form-control" required onchange="calculateTotal()">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>تاريخ المغادرة:</label>
+                        <input type="date" id="checkOut" class="form-control" required onchange="calculateTotal()">
+                    </div>
+                </div>
+
+                <div class="form-group" style="background: rgba(212, 175, 55, 0.1); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; font-weight: 700;">
+                        <span>إجمالي التكلفة الإجمالية:</span>
+                        <span id="calculatedTotal" style="color: var(--gold-primary);">0 $</span>
+                    </div>
+                </div>
+
+                <!-- Submit & Communication Options -->
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn">
+                        <i class="fa-solid fa-square-check"></i> تأكيد وحفظ الحجز بالنظام الداخلي
+                    </button>
+                    <button type="button" class="btn btn-email" onclick="sendBookingViaEmail()">
+                        <i class="fa-solid fa-envelope"></i> إرسال الطلب عبر بريد المدير (Mailto)
+                    </button>
+                    <button type="button" class="btn btn-whatsapp" onclick="sendBookingViaWhatsApp()">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال التفاصيل مباشر عبر الواتساب
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="copyBookingSummary()">
+                        <i class="fa-solid fa-copy"></i> نسخ ملخص الحجز للحافظة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Password Dialog Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fa-solid fa-lock"></i> تسجيل دخول مدير الفندق</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('adminModal')"></i>
+            </div>
+            <div class="form-group">
+                <label>رمز الدخول السري:</label>
+                <input type="password" id="adminPassInput" class="form-control" placeholder="كلمة المرور الافتراضية (1234)">
+            </div>
+            <button class="btn" onclick="verifyAdminPass()">دخول اللوحة</button>
+        </div>
+    </div>
+
+    <!-- Extend Stay Modal for Admin -->
+    <div class="modal" id="extendModal">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fa-solid fa-calendar-plus"></i> تمديد فترة إقامة النزيل</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('extendModal')"></i>
+            </div>
+            <input type="hidden" id="extendBookingId">
+            <div class="form-group">
+                <label>تاريخ المغادرة الجديد المحدد:</label>
+                <input type="date" id="newCheckOut" class="form-control" required>
+            </div>
+            <button class="btn" onclick="confirmExtendStay()">تحديث تاريخ المغادرة والحساب</button>
+        </div>
+    </div>
+
+    <script>
+        // Doubled Rooms Inventory (16 Rooms & Suites spanning 3 Floors)
+        const defaultRooms = [
+            // Floor 1
+            { id: 101, number: '101', type: 'غرفة مفردة ستاندرد (Single Standard)', price: 50, features: ['1 سرير مفرد', 'تكييف ممتاذ', 'واي فاي مجاني', 'شاشة HD'] },
+            { id: 102, number: '102', type: 'غرفة مفردة ديلوكس (Deluxe Single)', price: 65, features: ['1 سرير كينج', 'إطلالة هادئة', 'مشروبات مجانية', 'شاشة HD'] },
+            { id: 103, number: '103', type: 'غرفة مزدوجة فاخرة (Double Deluxe)', price: 85, features: ['2 سرير متصل', 'إفطار مجاني', 'واي فاي فائق', 'شاشة 50 بوصة'] },
+            { id: 104, number: '104', type: 'غرفة مزدوجة مطلة (Double Sea View)', price: 95, features: ['2 سرير', 'بلكونة مطلة', 'ثلاجة ميني', 'ضيافة خاصة'] },
+            { id: 105, number: '105', type: 'غرفة ستاندرد اقتصادي (Standard Single)', price: 45, features: ['1 سرير مفرد', 'تكييف', 'حمام خاص', 'واي فاي'] },
+            { id: 106, number: '106', type: 'غرفة مزدوجة عادية (Standard Twin)', price: 75, features: ['2 سرير منفصل', 'تكييف', 'خدمة غرف'] },
+            { id: 107, number: '107', type: 'غرفة ثلاثية للعائلات (Triple Room)', price: 110, features: ['3 أسرة منفصلة', 'تكييف قوي', 'جلسة واسعة'] },
+            { id: 108, number: '108', type: 'جناح جونيور فندقي (Junior Suite)', price: 130, features: ['سرير كينج + صالة', 'إفطار VIP', 'خدمة سريعة'] },
+
+            // Floor 2 & Floor 3
+            { id: 201, number: '201', type: 'جناح ملوكي فاخر (Royal Suite)', price: 170, features: ['غرفة نوم + صالة استقبال', 'جاكوزي خاص', 'إفطار ملوكي', 'خدمة 24/7'] },
+            { id: 202, number: '202', type: 'جناح عائلي واسع (Family Suite)', price: 150, features: ['3 أسرة كبيرة', 'مطبخ تحضيري', 'جلسة عائلية'] },
+            { id: 203, number: '203', type: 'جناح إكزيكتيف للأعمال (Executive Suite)', price: 185, features: ['مكتب عمل مزود بالإنترنت', 'شاشة عرض', 'إطلالة الميناء'] },
+            { id: 204, number: '204', type: 'جناح بورتسودان المتميز (Port Sudan Suite)', price: 210, features: ['شقة فندقية متكاملة', 'إطلالة بانورامية', 'موقف VIP'] },
+            { id: 301, number: '301', type: 'جناح العرسان الفاخر (Honeymoon Suite)', price: 190, features: ['ديكور رومنسي', 'جاكوزي', 'إفطار في الجناح'] },
+            { id: 302, number: '302', type: 'جناح كبار الشخصيات (VIP Suite)', price: 230, features: ['إطلالة كاملة للبحر الأحمر', 'خدمة شخصية', 'ضيافة يومية'] },
+            { id: 303, number: '303', type: 'غرفة بريميوم دبل (Premium Double)', price: 105, features: ['2 سرير كينج', 'إطلالة مرتفعة', 'إنترنت سريع'] },
+            { id: 304, number: '304', type: 'غرفة سوبيريور مفردة (Superior Single)', price: 70, features: ['1 سرير كينج', 'شاشة smart', 'إفطار'] }
+        ];
+
+        let rooms = JSON.parse(localStorage.getItem('hotel_city_rooms')) || defaultRooms;
+        let bookings = JSON.parse(localStorage.getItem('hotel_city_bookings')) || [];
+        let hotelSettings = JSON.parse(localStorage.getItem('hotel_city_settings')) || {
+            email: 'manager@cityhotel-portsudan.com',
+            whatsapp: '249912345678'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            saveData();
+            renderRooms();
+            setMinDates();
+            loadSettingsInputs();
+        });
+
+        function saveData() {
+            localStorage.setItem('hotel_city_rooms', JSON.stringify(rooms));
+            localStorage.setItem('hotel_city_bookings', JSON.stringify(bookings));
+            localStorage.setItem('hotel_city_settings', JSON.stringify(hotelSettings));
+        }
+
+        function loadSettingsInputs() {
+            if (document.getElementById('configEmail')) document.getElementById('configEmail').value = hotelSettings.email;
+            if (document.getElementById('configWhatsapp')) document.getElementById('configWhatsapp').value = hotelSettings.whatsapp;
+        }
+
+        function saveHotelSettings() {
+            hotelSettings.email = document.getElementById('configEmail').value.trim();
+            hotelSettings.whatsapp = document.getElementById('configWhatsapp').value.trim();
+            saveData();
+            alert('تم حفظ إعدادات التواصل المباشر بنجاح!');
+        }
+
+        function setMinDates() {
+            const today = new Date().toISOString().split('T')[0];
+            if (document.getElementById('checkIn')) document.getElementById('checkIn').min = today;
+            if (document.getElementById('checkOut')) document.getElementById('checkOut').min = today;
+        }
+
+        function switchTab(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.mobile-nav-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(viewId).classList.add('active');
+            
+            const mobBtn = document.getElementById('mob-' + viewId);
+            if (mobBtn) mobBtn.classList.add('active');
+
+            if (viewId === 'adminView') renderAdminDashboard();
+            if (viewId === 'bookingView') renderRooms();
+        }
+
+        // Helper to convert date string "YYYY-MM-DD" to standard Date object
+        function parseLocalDate(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        function getTodayDate() {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+
+        function getRoomStatusInfo(roomId) {
+            const today = getTodayDate();
+            
+            // Filter all confirmed bookings for this room sorted by checkIn date
+            const confirmedBookings = bookings.filter(b => b.roomId === roomId && b.status === 'confirmed')
+                .map(b => ({
+                    ...b,
+                    inDate: parseLocalDate(b.checkIn),
+                    outDate: parseLocalDate(b.checkOut)
+                }))
+                .sort((a, b) => a.inDate - b.inDate);
+
+            // Case 1: Currently Occupied by Guest
+            const currentBooking = confirmedBookings.find(b => today >= b.inDate && today < b.outDate);
+
+            if (currentBooking) {
+                return {
+                    status: 'occupied',
+                    badgeHtml: `<div class="status-box status-occupied"><i class="fa-solid fa-lock"></i> محجوزة ومغلقة حتى تاريخ المغادرة: ${currentBooking.checkOut}</div>`,
+                    isOccupied: true,
+                    currentBooking
+                };
+            }
+
+            // Case 2: Currently Empty but has a confirmed Future Pre-Booking
+            const futureBooking = confirmedBookings.find(b => b.inDate > today);
+
+            if (futureBooking) {
+                return {
+                    status: 'future_booked',
+                    badgeHtml: `<div class="status-box status-future"><i class="fa-solid fa-clock"></i> شاغرة ومتاحة (مشهورة بالحجز المسبق حتى تاريخ وصول النزيل: ${futureBooking.checkIn})</div>`,
+                    isOccupied: false,
+                    futureBooking
+                };
+            }
+
+            // Case 3: Completely Available
+            return {
+                status: 'available',
+                badgeHtml: `<div class="status-box status-available"><i class="fa-solid fa-circle-check"></i> شاغرة ومتاحة للحجز الفوري</div>`,
+                isOccupied: false
+            };
+        }
+
+        // Render Room Cards in UI
+        function renderRooms() {
+            const container = document.getElementById('roomsContainer');
+            container.innerHTML = rooms.map(room => {
+                const statusInfo = getRoomStatusInfo(room.id);
+
+                return `
+                    <div class="room-card">
+                        <div class="room-header">
+                            <span class="room-number">غرفة / جناح ${room.number}</span>
+                            <span class="room-price">${room.price} $ / ليلة</span>
+                        </div>
+                        <div class="room-body">
+                            <div class="room-type">${room.type}</div>
+                            ${statusInfo.badgeHtml}
+                            <div class="room-features">
+                                ${room.features.map(f => `<span><i class="fa-solid fa-check" style="color: var(--gold-primary);"></i> ${f}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                            <button class="btn" ${statusInfo.isOccupied ? 'style="opacity: 0.55; cursor: not-allowed;" disabled' : `onclick="openBookingModal(${room.id})"`}>
+                                <i class="fa-solid fa-calendar-plus"></i> ${statusInfo.isOccupied ? 'محجوزة حالياً' : 'حجز الآن / حجز مسبق'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openBookingModal(roomId) {
+            const room = rooms.find(r => r.id === roomId);
+            document.getElementById('modalRoomId').value = room.id;
+            document.getElementById('modalRoomTitle').innerText = `حجز غرفة رقم ${room.number}`;
+            
+            const statusInfo = getRoomStatusInfo(room.id);
+            const checkInInput = document.getElementById('checkIn');
+            const checkOutInput = document.getElementById('checkOut');
+
+            // Limit pre-booking max date if there is a future booking
+            if (statusInfo.futureBooking) {
+                checkInInput.max = statusInfo.futureBooking.checkIn;
+                checkOutInput.max = statusInfo.futureBooking.checkIn;
+            } else {
+                checkInInput.removeAttribute('max');
+                checkOutInput.removeAttribute('max');
+            }
+
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function calculateTotal() {
+            const roomId = parseInt(document.getElementById('modalRoomId').value);
+            const room = rooms.find(r => r.id === roomId);
+            const inVal = document.getElementById('checkIn').value;
+            const outVal = document.getElementById('checkOut').value;
+
+            if (inVal && outVal) {
+                const inDate = parseLocalDate(inVal);
+                const outDate = parseLocalDate(outVal);
+
+                if (outDate > inDate) {
+                    const diffTime = Math.abs(outDate - inDate);
+                    const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    const total = nights * room.price;
+                    document.getElementById('calculatedTotal').innerText = `${total} $ (${nights} ليالي)`;
+                    return { total, nights };
+                }
+            }
+            document.getElementById('calculatedTotal').innerText = `0 $`;
+            return { total: 0, nights: 0 };
+        }
+
+        // Save local system booking
+        function saveBookingLocally() {
+            const roomId = parseInt(document.getElementById('modalRoomId').value);
+            const room = rooms.find(r => r.id === roomId);
+            const name = document.getElementById('guestName').value.trim();
+            const phone = document.getElementById('guestPhone').value.trim();
+            const inDate = document.getElementById('checkIn').value;
+            const outDate = document.getElementById('checkOut').value;
+            const calc = calculateTotal();
+
+            if (!name || !phone || !inDate || !outDate) {
+                alert('يرجى ملء جميع الحقول المطلوبة (الاسم، الهاتف، والتواريخ).');
+                return null;
+            }
+
+            if (calc.total <= 0) {
+                alert('تنبيه: تاريخ المغادرة يجب أن يكون بعد تاريخ الوصول.');
+                return null;
+            }
+
+            // Conflict Check with existing confirmed bookings
+            const newIn = parseLocalDate(inDate);
+            const newOut = parseLocalDate(outDate);
+
+            const hasConflict = bookings.some(b => {
+                if (b.roomId === roomId && b.status === 'confirmed') {
+                    const existingIn = parseLocalDate(b.checkIn);
+                    const existingOut = parseLocalDate(b.checkOut);
+                    return (newIn < existingOut && newOut > existingIn);
+                }
+                return false;
+            });
+
+            if (hasConflict) {
+                alert('عذراً، التواريخ المختارة تتداخل مع حجز مؤكد آخر لهذه الغرفة. يرجى اختيار فترة أخرى.');
+                return null;
+            }
+
+            const newBooking = {
+                id: Date.now(),
+                roomId: room.id,
+                roomNumber: room.number,
+                guestName: name,
+                guestPhone: phone,
+                checkIn: inDate,
+                checkOut: outDate,
+                totalPrice: calc.total,
+                status: 'pending',
+                createdAt: new Date().toLocaleDateString('ar-EG')
+            };
+
+            bookings.push(newBooking);
+            saveData();
+            return newBooking;
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            const booking = saveBookingLocally();
+            if (booking) {
+                alert('تم حفظ وتأكيد طلب الحجز في النظام الداخلي للفندق بنجاح!');
+                closeModal('bookingModal');
+                document.getElementById('bookingForm').reset();
+            }
+        }
+
+        function getBookingTextSummary() {
+            const roomId = parseInt(document.getElementById('modalRoomId').value);
+            const room = rooms.find(r => r.id === roomId);
+            const name = document.getElementById('guestName').value.trim();
+            const phone = document.getElementById('guestPhone').value.trim();
+            const inDate = document.getElementById('checkIn').value;
+            const outDate = document.getElementById('checkOut').value;
+            const calc = calculateTotal();
+
+            return `طلب حجز جديد - فندق المدينة (بورتسودان):
+----------------------------------
+- اسم النزيل: ${name}
+- رقم الهاتف: ${phone}
+- رقم الغرفة / الجناح: ${room.number} (${room.type})
+- تاريخ الوصول: ${inDate}
+- تاريخ المغادرة: ${outDate}
+- عدد الليالي: ${calc.nights} ليلة
+- الإجمالي: ${calc.total} $
+----------------------------------
+نرجو تأكيد الحجز وإفادتنا.`;
+        }
+
+        function sendBookingViaEmail() {
+            const booking = saveBookingLocally();
+            if (!booking) return;
+
+            const subject = encodeURIComponent(`طلب حجز جديد - غرفة ${booking.roomNumber} - النزيل ${booking.guestName}`);
+            const bodyText = getBookingTextSummary();
+            const body = encodeURIComponent(bodyText);
+
+            const mailtoUrl = `mailto:${hotelSettings.email}?subject=${subject}&body=${body}`;
+            
+            // Trigger Mail app
+            window.location.href = mailtoUrl;
+
+            closeModal('bookingModal');
+            document.getElementById('bookingForm').reset();
+        }
+
+        function sendBookingViaWhatsApp() {
+            const booking = saveBookingLocally();
+            if (!booking) return;
+
+            const bodyText = getBookingTextSummary();
+            const encodedText = encodeURIComponent(bodyText);
+            const whatsappUrl = `https://wa.me/${hotelSettings.whatsapp}?text=${encodedText}`;
+
+            window.open(whatsappUrl, '_blank');
+
+            closeModal('bookingModal');
+            document.getElementById('bookingForm').reset();
+        }
+
+        function copyBookingSummary() {
+            const text = getBookingTextSummary();
+            
+            // Compatible clipboard copy
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            alert('تم نسخ تفاصيل وملخص الحجز إلى الحافظة بنجاح! يمكنك لصقه وإرساله لأي إيميل أو شات.');
+        }
+
+        function searchGuestBookings() {
+            const phone = document.getElementById('searchPhoneInput').value.trim();
+            const table = document.getElementById('guestBookingsTable');
+            const myBookings = bookings.filter(b => b.guestPhone === phone);
+
+            if (myBookings.length === 0) {
+                table.innerHTML = `<tr><td colspan="6" style="text-align: center;">لا توجد حجوزات مسجلة برقم الهاتف هذا</td></tr>`;
+                return;
+            }
+
+            table.innerHTML = myBookings.map(b => `
+                <tr>
+                    <td>#${b.id.toString().slice(-4)}</td>
+                    <td>غرفة ${b.roomNumber}</td>
+                    <td>${b.checkIn}</td>
+                    <td>${b.checkOut}</td>
+                    <td>${b.totalPrice} $</td>
+                    <td>
+                        <span class="badge badge-${b.status}">
+                            ${b.status === 'pending' ? 'بانتظار موافقة الإدارة' : b.status === 'confirmed' ? 'حجز مؤكد' : 'مرفوض/ملغى'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.add('active');
+        }
+
+        function verifyAdminPass() {
+            const pass = document.getElementById('adminPassInput').value;
+            if (pass === 'المدينه') {
+                closeModal('adminModal');
+                switchTab('adminView');
+            } else {
+                alert('رمز الدخول غير صحيح!');
+            }
+        }
+
+        function renderAdminDashboard() {
+            const table = document.getElementById('adminBookingsTable');
+            
+            const pending = bookings.filter(b => b.status === 'pending').length;
+            const confirmed = bookings.filter(b => b.status === 'confirmed').length;
+            const revenue = bookings.filter(b => b.status === 'confirmed').reduce((acc, b) => acc + b.totalPrice, 0);
+
+            document.getElementById('statPending').innerText = pending;
+            document.getElementById('statConfirmed').innerText = confirmed;
+            document.getElementById('statRevenue').innerText = `${revenue} $`;
+
+            if (bookings.length === 0) {
+                table.innerHTML = `<tr><td colspan="7" style="text-align: center;">لا توجد طلبات حجز مسجلة في النظام</td></tr>`;
+                return;
+            }
+
+            table.innerHTML = bookings.slice().reverse().map(b => `
+                <tr>
+                    <td><b>${b.guestName}</b></td>
+                    <td>${b.guestPhone}</td>
+                    <td>غرفة ${b.roomNumber}</td>
+                    <td>${b.checkIn} ➔ <b>${b.checkOut}</b></td>
+                    <td>${b.totalPrice} $</td>
+                    <td>
+                        <span class="badge badge-${b.status}">
+                            ${b.status === 'pending' ? 'معلق' : b.status === 'confirmed' ? 'مؤكد' : 'مرفوض'}
+                        </span>
+                    </td>
+                    <td>
+                        ${b.status === 'pending' ? `
+                            <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.8rem; display: inline-flex; margin-bottom: 4px;" onclick="updateStatus(${b.id}, 'confirmed')">قبول</button>
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.8rem; display: inline-flex;" onclick="updateStatus(${b.id}, 'rejected')">رفض</button>
+                        ` : b.status === 'confirmed' ? `
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.8rem; display: inline-flex;" onclick="openExtendModal(${b.id})">تمديد الإقامة</button>
+                        ` : '-'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStatus(bookingId, status) {
+            const booking = bookings.find(b => b.id === bookingId);
+            if (booking) {
+                booking.status = status;
+                saveData();
+                renderAdminDashboard();
+                renderRooms();
+            }
+        }
+
+        function openExtendModal(bookingId) {
+            const booking = bookings.find(b => b.id === bookingId);
+            document.getElementById('extendBookingId').value = booking.id;
+            document.getElementById('newCheckOut').min = booking.checkOut;
+            document.getElementById('newCheckOut').value = booking.checkOut;
+            document.getElementById('extendModal').classList.add('active');
+        }
+
+        function confirmExtendStay() {
+            const bookingId = parseInt(document.getElementById('extendBookingId').value);
+            const newOutStr = document.getElementById('newCheckOut').value;
+            const booking = bookings.find(b => b.id === bookingId);
+            const room = rooms.find(r => r.id === booking.roomId);
+
+            if (newOutStr && newOutStr > booking.checkOut) {
+                const oldOut = parseLocalDate(booking.checkOut);
+                const newOut = parseLocalDate(newOutStr);
+                const diffTime = Math.abs(newOut - oldOut);
+                const extraNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const extraCost = extraNights * room.price;
+
+                booking.checkOut = newOutStr;
+                booking.totalPrice += extraCost;
+                saveData();
+                closeModal('extendModal');
+                renderAdminDashboard();
+                renderRooms();
+                alert(`تم تمديد إقامة النزيل بنجاح لـ ${extraNights} ليالي إضافية بمبلغ +${extraCost}$!`);
+            } else {
+                alert('تنبيه: يرجى اختيار تاريخ مغادرة بعد التاريخ الحالي.');
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ rooms, bookings, hotelSettings }));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `hotel_city_portsudan_backup_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(e) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(event) {
+                try {
+                    const importedObj = JSON.parse(event.target.result);
+                    if (importedObj.rooms && importedObj.bookings) {
+                        rooms = importedObj.rooms;
+                        bookings = importedObj.bookings;
+                        if (importedObj.hotelSettings) hotelSettings = importedObj.hotelSettings;
+                        saveData();
+                        renderRooms();
+                        renderAdminDashboard();
+                        loadSettingsInputs();
+                        alert('تم استرجاع قاعدة البيانات كاملة بنجاح!');
+                    }
+                } catch(err) {
+                    alert('ملف البيانات غير صالح!');
+                }
+            };
+            fileReader.readAsText(e.target.files[0]);
+        }
+    </script>
+</body>
+</html>
+```
