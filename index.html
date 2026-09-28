@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فندق المدينة - نظام الحجوزات السحابية المباشرة</title>
+    <title>فندق المدينة بورتسودان - نظام الحجوزات الفندقية المباشر</title>
     
     <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-dark: #0a1128;
-            --bg-card: rgba(26, 38, 74, 0.85);
+            --bg-card: rgba(26, 38, 74, 0.88);
             --gold-primary: #d4af37;
             --gold-light: #f39c12;
             --text-light: #f8f9fa;
@@ -21,10 +21,10 @@
             --danger: #e74c3c;
             --warning: #f1c40f;
             --info: #3498db;
-            --border: rgba(212, 175, 55, 0.3);
+            --border: rgba(212, 175, 55, 0.35);
             --radius-lg: 18px;
             --radius-md: 12px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
             --backdrop: blur(16px);
         }
 
@@ -47,9 +47,9 @@
             padding-bottom: 90px;
         }
 
-        /* App Header */
+        /* App Header Navigation */
         .app-header {
-            background: rgba(10, 17, 40, 0.92);
+            background: rgba(10, 17, 40, 0.95);
             backdrop-filter: var(--backdrop);
             border-bottom: 1px solid var(--border);
             padding: 15px 30px;
@@ -70,7 +70,7 @@
         }
 
         .brand-logo i { font-size: 1.8rem; }
-        .brand-title { font-size: 1.4rem; font-weight: 800; }
+        .brand-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
 
         .desktop-nav { display: flex; gap: 10px; }
 
@@ -83,7 +83,7 @@
             cursor: pointer;
             font-size: 0.95rem;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -95,7 +95,7 @@
             border-color: var(--border);
         }
 
-        /* Mobile Bottom Nav */
+        /* Mobile Navigation Bar */
         .mobile-nav {
             display: none;
             position: fixed;
@@ -131,24 +131,25 @@
 
         .view-section {
             display: none;
-            animation: fadeIn 0.4s ease-in-out forwards;
+            animation: fadeIn 0.3s ease-in-out forwards;
         }
 
         .view-section.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Hero Banner */
+        /* Hero Banner Component */
         .hero-banner {
             text-align: center;
             padding: 35px 20px;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(26, 38, 74, 0.85));
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(26, 38, 74, 0.88));
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             margin-bottom: 30px;
+            box-shadow: var(--shadow);
         }
 
         .hero-title {
@@ -158,7 +159,7 @@
             font-weight: 800;
         }
 
-        .hero-desc { color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto; }
+        .hero-desc { color: var(--text-muted); font-size: 1rem; max-width: 650px; margin: 0 auto; line-height: 1.6; }
 
         .live-status-bar {
             display: inline-flex;
@@ -167,24 +168,24 @@
             background: rgba(46, 204, 113, 0.15);
             border: 1px solid var(--success);
             color: var(--success);
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.85rem;
             margin-top: 15px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .live-dot {
-            width: 8px; height: 8px;
+            width: 9px; height: 9px;
             background: var(--success);
             border-radius: 50%;
             box-shadow: 0 0 10px var(--success);
             animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* Glass Cards */
+        /* Glass Cards & Grids */
         .glass-card {
             background: var(--bg-card);
             backdrop-filter: var(--backdrop);
@@ -200,6 +201,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .section-title {
@@ -208,6 +211,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 800;
         }
 
         .rooms-grid {
@@ -230,7 +234,7 @@
         .room-card:hover {
             transform: translateY(-4px);
             border-color: var(--gold-primary);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
         }
 
         .room-header {
@@ -245,7 +249,7 @@
         .room-number { font-size: 1.15rem; font-weight: 800; color: var(--gold-primary); }
         .room-price { font-size: 0.95rem; font-weight: 700; color: var(--text-light); }
         .room-body { padding: 15px; flex-grow: 1; }
-        .room-type { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+        .room-type { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
 
         .room-status-badge {
             padding: 8px 12px;
@@ -266,13 +270,19 @@
         .room-features {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             color: var(--text-muted);
             font-size: 0.85rem;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        /* Buttons & Forms */
+        .room-features span {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        /* Buttons & Controls */
         .btn {
             background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
             color: #000;
@@ -282,15 +292,15 @@
             font-weight: 700;
             cursor: pointer;
             width: 100%;
-            transition: 0.3s;
-            display: flex;
+            transition: 0.25s;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
             font-size: 0.95rem;
         }
 
-        .btn:hover { opacity: 0.9; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .btn:hover { opacity: 0.92; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35); }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.08);
@@ -301,6 +311,7 @@
         .btn-secondary:hover { background: rgba(255, 255, 255, 0.18); }
         .btn-danger { background: var(--danger); color: #fff; }
         .btn-success { background: var(--success); color: #fff; }
+        .btn-warning { background: var(--warning); color: #000; }
 
         .form-group { margin-bottom: 15px; }
 
@@ -309,6 +320,7 @@
             margin-bottom: 6px;
             font-size: 0.9rem;
             color: var(--text-muted);
+            font-weight: 600;
         }
 
         .form-control {
@@ -320,7 +332,7 @@
             color: var(--text-light);
             font-size: 0.95rem;
             outline: none;
-            transition: 0.3s;
+            transition: 0.25s;
         }
 
         .form-control:focus {
@@ -329,9 +341,9 @@
         }
 
         .badge {
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             font-weight: 700;
         }
 
@@ -345,15 +357,16 @@
             width: 100%;
             border-collapse: collapse;
             text-align: right;
+            white-space: nowrap;
         }
 
         th, td {
             padding: 12px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             font-size: 0.9rem;
         }
 
-        th { color: var(--gold-primary); background: rgba(10, 17, 40, 0.6); font-weight: 700; }
+        th { color: var(--gold-primary); background: rgba(10, 17, 40, 0.7); font-weight: 700; }
 
         .stats-grid {
             display: grid;
@@ -386,6 +399,7 @@
         .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--text-light); }
         .stat-label { font-size: 0.8rem; color: var(--text-muted); }
 
+        /* Modal Dialogs */
         .modal {
             display: none;
             position: fixed;
@@ -410,11 +424,11 @@
             box-shadow: var(--shadow);
             max-height: 90vh;
             overflow-y: auto;
-            animation: zoomIn 0.3s ease-out;
+            animation: zoomIn 0.25s ease-out;
         }
 
         @keyframes zoomIn {
-            from { transform: scale(0.9); opacity: 0; }
+            from { transform: scale(0.92); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
@@ -429,11 +443,10 @@
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <header class="app-header">
         <a href="#" class="brand-logo">
             <i class="fa-solid fa-hotel"></i>
-            <span class="brand-title">فندق المدينة</span>
+            <span class="brand-title">فندق المدينة بورتسودان</span>
         </a>
         <nav class="desktop-nav">
             <button class="nav-btn active" onclick="switchTab('bookingView')">
@@ -443,12 +456,12 @@
                 <i class="fa-solid fa-clock-rotate-left"></i> استعلام حجز
             </button>
             <button class="nav-btn" onclick="openAdminModal()">
-                <i class="fa-solid fa-user-shield"></i> لوحة المدير السحابية
+                <i class="fa-solid fa-user-shield"></i> لوحة المدير المباشرة
             </button>
         </nav>
     </header>
 
-    <!-- Mobile Navigation -->
+    <!-- Mobile Bottom Navigation -->
     <nav class="mobile-nav">
         <button class="mobile-nav-btn active" id="mob-bookingView" onclick="switchTab('bookingView')">
             <i class="fa-solid fa-bed"></i>
@@ -464,17 +477,16 @@
         </button>
     </nav>
 
-    <!-- Main Content Container -->
     <main class="container">
 
-        <!-- SECTION 1: Room Booking View -->
+        <!-- SECTION 1: Guest Room Booking View -->
         <section id="bookingView" class="view-section active">
             <div class="hero-banner">
-                <h1 class="hero-title">أهلاً بك في فندق المدينة بورتسودان</h1>
-                <p class="hero-desc">إقامة فاخرة وخدمات خماسية النجوم. اختر غرفتك واحجزها سحابياً ومباشرة عبر النظام.</p>
+                <h1 class="hero-title">مرحباً بكم في فندق المدينة بورتسودان</h1>
+                <p class="hero-desc">إقامة فاخرة وخدمات خماسية النجوم. اختر غرفتك واحجزها فوراً مع تحديث مباشر للحالة.</p>
                 <div class="live-status-bar">
                     <div class="live-dot"></div>
-                    <span>النظام السحابي متصل ويعمل بالمزامنة المباشرة مع جميع الأجهزة</span>
+                    <span>النظام متصل ويعمل بالمزامنة والتأكيد المباشر</span>
                 </div>
             </div>
 
@@ -483,21 +495,21 @@
             </div>
 
             <div class="rooms-grid" id="roomsContainer">
-                <!-- Dynamic Content Loading -->
+                <!-- Dynamically populated via JS -->
             </div>
         </section>
 
-        <!-- SECTION 2: Guest Booking Status Search -->
+        <!-- SECTION 2: Guest Booking Lookup -->
         <section id="myBookingsView" class="view-section">
             <div class="glass-card">
                 <div class="section-header">
                     <h2 class="section-title"><i class="fa-solid fa-magnifying-glass"></i> الاستعلام عن حالة الحجز</h2>
                 </div>
                 <div class="form-group">
-                    <label>أدخل رقم هاتفك للبحث عن حجوزاتك لدى الفندق:</label>
+                    <label>أدخل رقم هاتفك المسجل لدى الفندق للبحث عن كافة حجوزاتك:</label>
                     <div style="display: flex; gap: 10px;">
                         <input type="tel" id="searchPhoneInput" class="form-control" placeholder="مثال: 0123456789">
-                        <button class="btn" style="width: 130px;" onclick="searchGuestBookings()">بحث الآن</button>
+                        <button class="btn" style="width: 140px;" onclick="searchGuestBookings()">بحث الآن</button>
                     </div>
                 </div>
 
@@ -510,34 +522,42 @@
                                 <th>تاريخ الوصول</th>
                                 <th>تاريخ المغادرة</th>
                                 <th>الإجمالي</th>
-                                <th>الحالة السحابية</th>
+                                <th>حالة الحجز</th>
                             </tr>
                         </thead>
                         <tbody id="guestBookingsTable">
-                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">يرجى أدخال رقم هاتفك للبحث</td></tr>
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">يرجى كتابة رقم هاتفك للبحث</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 3: Admin Dashboard -->
+        <!-- SECTION 3: Admin Management Dashboard -->
         <section id="adminView" class="view-section">
             <div class="glass-card">
                 <div class="section-header">
-                    <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> لوحة تحكم المدير المباشرة</h2>
-                    <button class="btn btn-secondary" style="width: auto; padding: 8px 15px;" onclick="switchTab('bookingView')">
-                        <i class="fa-solid fa-right-from-bracket"></i> خروج
-                    </button>
+                    <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> لوحة تحكم مدير الفندق</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-warning" style="width: auto; padding: 8px 15px;" onclick="openManualBookingModal()">
+                            <i class="fa-solid fa-plus"></i> إضافة حجز يدوي
+                        </button>
+                        <button class="btn btn-danger" style="width: auto; padding: 8px 15px;" onclick="clearAllBookingsData()">
+                            <i class="fa-solid fa-trash"></i> مسح الحجوزات
+                        </button>
+                        <button class="btn btn-secondary" style="width: auto; padding: 8px 15px;" onclick="switchTab('bookingView')">
+                            <i class="fa-solid fa-right-from-bracket"></i> خروج
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Stats Grid -->
+                <!-- Admin Dynamic Statistics -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
                         <div>
                             <div class="stat-value" id="statPending">0</div>
-                            <div class="stat-label">طلبات تنتظر قبولك</div>
+                            <div class="stat-label">طلبات ينتظر قبولها</div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -551,51 +571,51 @@
                         <div class="stat-icon"><i class="fa-solid fa-vault"></i></div>
                         <div>
                             <div class="stat-value" id="statRevenue">0 $</div>
-                            <div class="stat-label">إجمالي الإيرادات</div>
+                            <div class="stat-label">إجمالي الإيرادات المؤكدة</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Admin Contact Settings -->
+                <!-- Admin Notification Settings -->
                 <div class="glass-card" style="background: rgba(10, 17, 40, 0.5); padding: 18px; margin-bottom: 25px;">
                     <h3 style="font-size: 1rem; color: var(--gold-primary); margin-bottom: 12px;">
-                        <i class="fa-solid fa-sliders"></i> إعدادات استقبال إشعارات الحجز:
+                        <i class="fa-solid fa-sliders"></i> إعدادات استقبال الرسائل والإشعارات:
                     </h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
                         <div class="form-group" style="margin: 0;">
-                            <label>بريد الفندق (لإرسال الطلبات):</label>
+                            <label>بريد الفندق (لاستقبال الحجوزات):</label>
                             <input type="email" id="hotelEmailInput" class="form-control" value="admin@hotel.com">
                         </div>
                         <div class="form-group" style="margin: 0;">
-                            <label>رقم واتساب الفندق (لتلقي الرسائل):</label>
+                            <label>رقم واتساب الفندق (شاملاً رمز الدولة):</label>
                             <input type="text" id="hotelWhatsappInput" class="form-control" value="249123456789">
                         </div>
                     </div>
                     <button class="btn btn-secondary" style="margin-top: 12px; width: auto;" onclick="saveHotelSettings()">
-                        <i class="fa-solid fa-floppy-disk"></i> حفظ إعدادات التواصل
+                        <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات
                     </button>
                 </div>
 
-                <!-- Bookings Table -->
+                <!-- Bookings Management Table -->
                 <div class="section-header">
-                    <h2 class="section-title"><i class="fa-solid fa-list-check"></i> طلبات النزلاء الواردة سحابياً</h2>
+                    <h2 class="section-title"><i class="fa-solid fa-list-check"></i> قائمة كافة الحجوزات الواردة</h2>
                 </div>
 
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>اسم النزيل</th>
+                                <th>النزيل</th>
                                 <th>الهاتف</th>
                                 <th>الغرفة</th>
                                 <th>تاريخ الوصول ➔ المغادرة</th>
                                 <th>المبلغ</th>
                                 <th>الحالة</th>
-                                <th>إجراءات المدير</th>
+                                <th>إجراءات الإدارة</th>
                             </tr>
                         </thead>
                         <tbody id="adminBookingsTable">
-                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">جاري تحميل الحجوزات...</td></tr>
+                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">جاري عرض الحجوزات...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -604,6 +624,7 @@
         </section>
 
     </main>
+
 
     <!-- Modal 1: Booking Form Modal -->
     <div class="modal" id="bookingModal">
@@ -616,7 +637,7 @@
                 <input type="hidden" id="modalRoomId">
                 <div class="form-group">
                     <label>الاسم بالكامل:</label>
-                    <input type="text" id="guestName" class="form-control" required placeholder="أدخل الاسم الثلاثي">
+                    <input type="text" id="guestName" class="form-control" required placeholder="أدخل اسم النزيل الثلاثي">
                 </div>
                 <div class="form-group">
                     <label>رقم الهاتف:</label>
@@ -635,13 +656,13 @@
 
                 <div class="form-group" style="background: rgba(212, 175, 55, 0.1); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border);">
                     <div style="display: flex; justify-content: space-between; font-weight: 700;">
-                        <span>إجمالي التكلفة:</span>
+                        <span>تكلفة الإقامة الإجمالية:</span>
                         <span id="calculatedTotal" style="color: var(--gold-primary);">0 $</span>
                     </div>
                 </div>
 
                 <button type="submit" id="submitBookingBtn" class="btn">
-                    <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال طلب الحجز
+                    <i class="fa-solid fa-paper-plane"></i> تأكيد الحجز الفوري
                 </button>
             </form>
         </div>
@@ -651,20 +672,20 @@
     <div class="modal" id="successModal">
         <div class="modal-content" style="text-align: center;">
             <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 15px;"></i>
-            <h3 style="color: var(--gold-primary); font-size: 1.4rem; margin-bottom: 10px;">تم تسجيل حجزك بنجاح!</h3>
+            <h3 style="color: var(--gold-primary); font-size: 1.4rem; margin-bottom: 10px;">تمت عملية الحجز والتأكيد بنجاح!</h3>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
-                تم حفظ طلبك في السحابة. يمكنك إرسال إشعار مباشر للمدير لتسريع تأكيد الحجز:
+                تم حفظ بيانات الحجز في النظام وتحديث حالة الغرفة فوراً. اختياري: يمكنك إرسال نسخة للواتساب أو البريد الإلكتروني.
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button class="btn btn-danger" onclick="sendViaEmail()">
-                    <i class="fa-solid fa-envelope"></i> إرسال الطلب عبر بريد المدير
-                </button>
                 <button class="btn btn-success" onclick="sendViaWhatsapp()">
-                    <i class="fa-brands fa-whatsapp"></i> إرسال الطلب مباشرة عبر واتساب
+                    <i class="fa-brands fa-whatsapp"></i> إرسال تفاصيل الحجز للواتساب
+                </button>
+                <button class="btn btn-danger" onclick="sendViaEmail()">
+                    <i class="fa-solid fa-envelope"></i> إرسال عبر البريد الإلكتروني
                 </button>
                 <button class="btn btn-secondary" onclick="closeModal('successModal')">
-                    إغلاق والعودة
+                    إغلاق ومتابعة
                 </button>
             </div>
         </div>
@@ -674,11 +695,11 @@
     <div class="modal" id="adminModal">
         <div class="modal-content" style="max-width: 380px;">
             <div class="section-header">
-                <h3 class="section-title"><i class="fa-solid fa-lock"></i> دخول لوحة المدير</h3>
+                <h3 class="section-title"><i class="fa-solid fa-lock"></i> تسجيل دخول المدير</h3>
                 <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('adminModal')"></i>
             </div>
             <div class="form-group">
-                <label>رمز الدخول:</label>
+                <label>أدخل رمز الدخول السرّي:</label>
                 <input type="password" id="adminPassInput" class="form-control" placeholder="كلمة المرور الافتراضية (1234)">
             </div>
             <button class="btn" onclick="verifyAdminPass()">دخول اللوحة</button>
@@ -701,13 +722,43 @@
         </div>
     </div>
 
-    <!-- Application Script Engine -->
-    <script>
-        // Real Live Cloud API Endpoint
-        const CLOUD_API_URL = "https://api.jsonbin.io/v3/b/66d54236e41b4d34e428df1d";
-        const CLOUD_KEY = "$2a$10$R9/LhFhS2R0w0A4mKqT8E.gV2UfOaG6oY9.i8L4p2O";
+    <!-- Modal 5: Manual Booking (Admin) -->
+    <div class="modal" id="manualBookingModal">
+        <div class="modal-content">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fa-solid fa-user-plus"></i> إضافة حجز يدوي من الاستقبال</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('manualBookingModal')"></i>
+            </div>
+            <form id="manualBookingForm" onsubmit="handleManualBookingSubmit(event)">
+                <div class="form-group">
+                    <label>اختر الغرفة:</label>
+                    <select id="manualRoomSelect" class="form-control" required></select>
+                </div>
+                <div class="form-group">
+                    <label>اسم النزيل الثلاثي:</label>
+                    <input type="text" id="manualGuestName" class="form-control" required placeholder="مثال: محمد أحمد علي">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف:</label>
+                    <input type="tel" id="manualGuestPhone" class="form-control" required placeholder="0123456789">
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label>تاريخ الوصول:</label>
+                        <input type="date" id="manualCheckIn" class="form-control" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>تاريخ المغادرة:</label>
+                        <input type="date" id="manualCheckOut" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn"><i class="fa-solid fa-plus"></i> إدخال الحجز فوراً</button>
+            </form>
+        </div>
+    </div>
 
-        // 16 Rooms Inventory
+    <script>
+        // 16 Full Hotel Rooms Inventory Definition
         const initialRoomsList = [
             { id: 101, number: '101', type: 'غرفة مفردة فاخرة (Single Room)', price: 50, features: ['1 سرير كبير', 'واي فاي مجاني', 'شاشة HD'] },
             { id: 102, number: '102', type: 'غرفة مفردة فاخرة (Single Room)', price: 50, features: ['1 سرير كبير', 'إطلالة جانبية', 'تكييف مركز'] },
@@ -727,67 +778,71 @@
             { id: 404, number: '404', type: 'غرفة ثلاثية (Triple Room)', price: 110, features: ['3 أسرة فردية', 'شاشة كبيرة', 'مطبخ'] }
         ];
 
-        let cloudBookings = [];
+        let localBookings = [];
         let currentBookingSummary = null;
 
         let hotelEmail = localStorage.getItem('hotel_email') || 'admin@hotel.com';
         let hotelWhatsapp = localStorage.getItem('hotel_whatsapp') || '249123456789';
 
+        // Realtime Multi-tab & Broadcast Sync Engine
+        const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('hotel_sync_channel') : null;
+
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('hotelEmailInput').value = hotelEmail;
             document.getElementById('hotelWhatsappInput').value = hotelWhatsapp;
             setMinDates();
-            loadCloudBookings();
+            loadBookingsData();
 
-            // Auto refresh every 10 seconds for real-time synchronization across devices
-            setInterval(loadCloudBookings, 10000);
+            // Listen to live updates from other tabs / windows
+            if (syncChannel) {
+                syncChannel.onmessage = (event) => {
+                    if (event.data && event.data.type === 'DATA_UPDATED') {
+                        loadBookingsData();
+                    }
+                };
+            }
+
+            // Sync with LocalStorage storage events
+            window.addEventListener('storage', () => {
+                loadBookingsData();
+            });
         });
 
         function setMinDates() {
             const today = new Date().toISOString().split('T')[0];
             const checkInEl = document.getElementById('checkIn');
             const checkOutEl = document.getElementById('checkOut');
+            const manualInEl = document.getElementById('manualCheckIn');
+            const manualOutEl = document.getElementById('manualCheckOut');
+
             if(checkInEl) checkInEl.min = today;
             if(checkOutEl) checkOutEl.min = today;
+            if(manualInEl) manualInEl.min = today;
+            if(manualOutEl) manualOutEl.min = today;
         }
 
-        // Fetch Data from Live Cloud Sync Database
-        async function loadCloudBookings() {
-            try {
-                const res = await fetch(CLOUD_API_URL + "/latest", {
-                    headers: { "X-Access-Key": CLOUD_KEY }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    cloudBookings = data.record.bookings || [];
-                    localStorage.setItem('cached_bookings', JSON.stringify(cloudBookings));
-                } else {
-                    cloudBookings = JSON.parse(localStorage.getItem('cached_bookings')) || [];
+        function loadBookingsData() {
+            const stored = localStorage.getItem('city_hotel_bookings');
+            if (stored) {
+                try {
+                    localBookings = JSON.parse(stored);
+                } catch(e) {
+                    localBookings = [];
                 }
-            } catch (err) {
-                cloudBookings = JSON.parse(localStorage.getItem('cached_bookings')) || [];
+            } else {
+                localBookings = [];
             }
-            renderRoomsWithCloudStatus();
+            renderRoomsWithStatus();
             renderAdminDashboard();
         }
 
-        // Save Data to Live Cloud Database
-        async function syncToCloud() {
-            localStorage.setItem('cached_bookings', JSON.stringify(cloudBookings));
-            renderRoomsWithCloudStatus();
+        function saveDataAndBroadcast() {
+            localStorage.setItem('city_hotel_bookings', JSON.stringify(localBookings));
+            renderRoomsWithStatus();
             renderAdminDashboard();
 
-            try {
-                await fetch(CLOUD_API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Access-Key': CLOUD_KEY
-                    },
-                    body: JSON.stringify({ bookings: cloudBookings })
-                });
-            } catch (err) {
-                console.error("Cloud Sync Error:", err);
+            if (syncChannel) {
+                syncChannel.postMessage({ type: 'DATA_UPDATED', timestamp: Date.now() });
             }
         }
 
@@ -802,16 +857,16 @@
             if (mobBtn) mobBtn.classList.add('active');
 
             if (viewId === 'adminView') renderAdminDashboard();
-            if (viewId === 'bookingView') renderRoomsWithCloudStatus();
+            if (viewId === 'bookingView') renderRoomsWithStatus();
         }
 
-        // Render Rooms with Status based on Current Date
-        function renderRoomsWithCloudStatus() {
+        function renderRoomsWithStatus() {
             const container = document.getElementById('roomsContainer');
             const todayStr = new Date().toISOString().split('T')[0];
 
             container.innerHTML = initialRoomsList.map(room => {
-                const activeConfirmed = cloudBookings.find(b => 
+                // Find all active or confirmed bookings for this room
+                const activeConfirmed = localBookings.find(b => 
                     b.roomId === room.id && 
                     b.status === 'confirmed' && 
                     b.checkOut >= todayStr
@@ -825,14 +880,14 @@
                         statusHtml = `
                             <div class="room-status-badge status-occupied">
                                 <i class="fa-solid fa-lock"></i>
-                                <span>محجوزة حتى تاريخ مغادرة النزيل: <b>${activeConfirmed.checkOut}</b></span>
+                                <span>مأهولة بالنزيل حتى تاريخ: <b>${activeConfirmed.checkOut}</b></span>
                             </div>`;
                         isBookable = false;
                     } else {
                         statusHtml = `
                             <div class="room-status-badge status-prebooked">
                                 <i class="fa-solid fa-calendar-check"></i>
-                                <span>شاغرة ومتاحة الآن (مجهزة لحجز مسبق بتاريخ: <b>${activeConfirmed.checkIn}</b>)</span>
+                                <span>شاغرة الآن (مجهزة لحجز مسبق بتاريخ: <b>${activeConfirmed.checkIn}</b>)</span>
                             </div>`;
                         isBookable = true;
                     }
@@ -897,7 +952,7 @@
             }
         }
 
-        async function handleBookingSubmit(e) {
+        function handleBookingSubmit(e) {
             e.preventDefault();
             const roomId = parseInt(document.getElementById('modalRoomId').value);
             const room = initialRoomsList.find(r => r.id === roomId);
@@ -912,10 +967,6 @@
                 return;
             }
 
-            const btn = document.getElementById('submitBookingBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الطلب...`;
-            btn.disabled = true;
-
             const newBooking = {
                 id: 'B' + Date.now().toString().slice(-6),
                 roomId: room.id,
@@ -929,16 +980,13 @@
                 createdAt: new Date().toLocaleDateString('ar-EG')
             };
 
-            cloudBookings.push(newBooking);
+            localBookings.push(newBooking);
             currentBookingSummary = newBooking;
 
-            await syncToCloud();
+            saveDataAndBroadcast();
 
             closeModal('bookingModal');
             document.getElementById('bookingForm').reset();
-            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال طلب الحجز`;
-            btn.disabled = false;
-
             document.getElementById('successModal').classList.add('active');
         }
 
@@ -962,13 +1010,13 @@
             if (!currentBookingSummary) return;
             const b = currentBookingSummary;
             const text = encodeURIComponent(
-                `*طلب حجز جديد - فندق المدينة*\n` +
+                `*طلب حجز جديد - فندق المدينة بورتسودان*\n` +
                 `النزيل: ${b.guestName}\n` +
                 `الهاتف: ${b.guestPhone}\n` +
                 `الغرفة: ${b.roomNumber}\n` +
                 `الوصول: ${b.checkIn}\n` +
                 `المغادرة: ${b.checkOut}\n` +
-                `المبلغ: ${b.totalPrice} $`
+                `المبلغ الإجمالي: ${b.totalPrice} $`
             );
             window.open(`https://wa.me/${hotelWhatsapp}?text=${text}`, '_blank');
         }
@@ -976,7 +1024,7 @@
         function searchGuestBookings() {
             const phone = document.getElementById('searchPhoneInput').value.trim();
             const table = document.getElementById('guestBookingsTable');
-            const myBookings = cloudBookings.filter(b => b.guestPhone === phone);
+            const myBookings = localBookings.filter(b => b.guestPhone === phone);
 
             if (myBookings.length === 0) {
                 table.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">لا توجد حجوزات مسجلة بهذا الرقم</td></tr>`;
@@ -1005,27 +1053,27 @@
                 closeModal('adminModal');
                 switchTab('adminView');
             } else {
-                alert('كلمة المرور غير صحيحة!');
+                alert('رمز الدخول غير صحيح! الرمز الافتراضي هو 1234');
             }
         }
 
         function renderAdminDashboard() {
             const table = document.getElementById('adminBookingsTable');
             
-            const pending = cloudBookings.filter(b => b.status === 'pending').length;
-            const confirmed = cloudBookings.filter(b => b.status === 'confirmed').length;
-            const revenue = cloudBookings.filter(b => b.status === 'confirmed').reduce((acc, b) => acc + (b.totalPrice || 0), 0);
+            const pending = localBookings.filter(b => b.status === 'pending').length;
+            const confirmed = localBookings.filter(b => b.status === 'confirmed').length;
+            const revenue = localBookings.filter(b => b.status === 'confirmed').reduce((acc, b) => acc + (b.totalPrice || 0), 0);
 
             document.getElementById('statPending').innerText = pending;
             document.getElementById('statConfirmed').innerText = confirmed;
             document.getElementById('statRevenue').innerText = `${revenue} $`;
 
-            if (cloudBookings.length === 0) {
+            if (localBookings.length === 0) {
                 table.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">لا توجد طلبات حجز مسجلة حالياً</td></tr>`;
                 return;
             }
 
-            table.innerHTML = cloudBookings.slice().reverse().map(b => `
+            table.innerHTML = localBookings.slice().reverse().map(b => `
                 <tr>
                     <td><b>${b.guestName}</b></td>
                     <td>${b.guestPhone}</td>
@@ -1035,36 +1083,42 @@
                     <td><span class="badge badge-${b.status}">${b.status === 'pending' ? 'معلق' : b.status === 'confirmed' ? 'مقبول' : 'مرفوض'}</span></td>
                     <td>
                         ${b.status === 'pending' ? `
-                            <button class="btn btn-success" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="updateCloudStatus('${b.id}', 'confirmed')">قبول</button>
-                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="updateCloudStatus('${b.id}', 'rejected')">رفض</button>
+                            <button class="btn btn-success" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="updateBookingStatus('${b.id}', 'confirmed')">قبول</button>
+                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="updateBookingStatus('${b.id}', 'rejected')">رفض</button>
                         ` : b.status === 'confirmed' ? `
                             <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="openExtendModal('${b.id}')">تمديد الإقامة</button>
                         ` : '-'}
+                        <button class="btn btn-danger" style="padding: 5px 8px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="deleteBooking('${b.id}')" title="حذف"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        async function updateCloudStatus(bookingId, status) {
-            const booking = cloudBookings.find(b => b.id === bookingId);
+        function updateBookingStatus(bookingId, status) {
+            const booking = localBookings.find(b => b.id === bookingId);
             if (booking) {
                 booking.status = status;
-                await syncToCloud();
+                saveDataAndBroadcast();
             }
         }
 
+        function deleteBooking(bookingId) {
+            localBookings = localBookings.filter(b => b.id !== bookingId);
+            saveDataAndBroadcast();
+        }
+
         function openExtendModal(bookingId) {
-            const booking = cloudBookings.find(b => b.id === bookingId);
+            const booking = localBookings.find(b => b.id === bookingId);
             document.getElementById('extendBookingId').value = booking.id;
             document.getElementById('newCheckOut').min = booking.checkOut;
             document.getElementById('newCheckOut').value = booking.checkOut;
             document.getElementById('extendModal').classList.add('active');
         }
 
-        async function confirmExtendStay() {
+        function confirmExtendStay() {
             const bookingId = document.getElementById('extendBookingId').value;
             const newOutStr = document.getElementById('newCheckOut').value;
-            const booking = cloudBookings.find(b => b.id === bookingId);
+            const booking = localBookings.find(b => b.id === bookingId);
             const room = initialRoomsList.find(r => r.id === booking.roomId);
 
             if (newOutStr && newOutStr > booking.checkOut) {
@@ -1077,11 +1131,63 @@
                 booking.checkOut = newOutStr;
                 booking.totalPrice += extraCost;
 
-                await syncToCloud();
+                saveDataAndBroadcast();
                 closeModal('extendModal');
-                alert(`تم تمديد إقامة النزيل بنجاح لـ ${extraNights} ليالي إضافية.`);
             } else {
-                alert('يرجى اختيار تاريخ مغادرة جديد أبعد من التاريخ السابق.');
+                alert('يرجى تحديد تاريخ مغادرة أبعد من التاريخ الحالي.');
+            }
+        }
+
+        function openManualBookingModal() {
+            const select = document.getElementById('manualRoomSelect');
+            select.innerHTML = initialRoomsList.map(r => `<option value="${r.id}">غرفة ${r.number} - ${r.type} (${r.price} $)</option>`).join('');
+            document.getElementById('manualBookingModal').classList.add('active');
+        }
+
+        function handleManualBookingSubmit(e) {
+            e.preventDefault();
+            const roomId = parseInt(document.getElementById('manualRoomSelect').value);
+            const room = initialRoomsList.find(r => r.id === roomId);
+            const name = document.getElementById('manualGuestName').value;
+            const phone = document.getElementById('manualGuestPhone').value;
+            const inDate = document.getElementById('manualCheckIn').value;
+            const outDate = document.getElementById('manualCheckOut').value;
+
+            const inD = new Date(inDate);
+            const outD = new Date(outDate);
+
+            if (!outD || outD <= inD) {
+                alert('يرجى اختيار تاريخ مغادرة صحيح.');
+                return;
+            }
+
+            const diffTime = Math.abs(outD - inD);
+            const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const total = nights * room.price;
+
+            const manualBooking = {
+                id: 'B' + Date.now().toString().slice(-6),
+                roomId: room.id,
+                roomNumber: room.number,
+                guestName: name,
+                guestPhone: phone,
+                checkIn: inDate,
+                checkOut: outDate,
+                totalPrice: total,
+                status: 'confirmed',
+                createdAt: new Date().toLocaleDateString('ar-EG')
+            };
+
+            localBookings.push(manualBooking);
+            saveDataAndBroadcast();
+            closeModal('manualBookingModal');
+            document.getElementById('manualBookingForm').reset();
+        }
+
+        function clearAllBookingsData() {
+            if (confirm('هل أنت تأكد من مسح جميع الحجوزات وإعادة تفريغ الغرف؟')) {
+                localBookings = [];
+                saveDataAndBroadcast();
             }
         }
 
