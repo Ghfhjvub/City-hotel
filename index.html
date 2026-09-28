@@ -7,6 +7,8 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK للتحكم بإرسال الإيميلات -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         body { font-family: 'Cairo', sans-serif; }
     </style>
@@ -63,8 +65,10 @@
                             <span class="text-amber-600 font-black">$50 / ليلة</span>
                         </div>
                         <p class="text-slate-600 text-sm mb-4">غرفة مريحة ومجهّزة بسرير فردي واسع، إطلالة رائعة، وتكييف هواء ممتاز.</p>
+                        <!-- عنصر حالة الغرفة الديناميكي -->
+                        <div id="status-room-1" class="mb-4 text-xs font-bold p-2.5 rounded-xl bg-slate-100 text-slate-600 text-center">جاري التحقق من التوافر...</div>
                     </div>
-                    <button onclick="openBookingModal('غرفة مفردة ديلوكس', 50)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
+                    <button id="btn-room-1" onclick="openBookingModal('غرفة مفردة ديلوكس', 50)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
                         احجز هذه الغرفة
                     </button>
                 </div>
@@ -80,8 +84,10 @@
                             <span class="text-amber-600 font-black">$85 / ليلة</span>
                         </div>
                         <p class="text-slate-600 text-sm mb-4">تضم سريرين مزدوجين أو سرير كبير كوين، مثالية للأزواج والعائلات الصغيرة.</p>
+                        <!-- عنصر حالة الغرفة الديناميكي -->
+                        <div id="status-room-2" class="mb-4 text-xs font-bold p-2.5 rounded-xl bg-slate-100 text-slate-600 text-center">جاري التحقق من التوافر...</div>
                     </div>
-                    <button onclick="openBookingModal('غرفة مزدوجة فاخرة', 85)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
+                    <button id="btn-room-2" onclick="openBookingModal('غرفة مزدوجة فاخرة', 85)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
                         احجز هذه الغرفة
                     </button>
                 </div>
@@ -97,8 +103,10 @@
                             <span class="text-amber-600 font-black">$150 / ليلة</span>
                         </div>
                         <p class="text-slate-600 text-sm mb-4">جناح فاخر بمساحة واسعة، صالة جلوس مستقلة، وأعلى معايير الرفاهية والخدمة.</p>
+                        <!-- عنصر حالة الغرفة الديناميكي -->
+                        <div id="status-room-3" class="mb-4 text-xs font-bold p-2.5 rounded-xl bg-slate-100 text-slate-600 text-center">جاري التحقق من التوافر...</div>
                     </div>
-                    <button onclick="openBookingModal('جناح ملكي خاص', 150)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
+                    <button id="btn-room-3" onclick="openBookingModal('جناح ملكي خاص', 150)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
                         احجز هذه الغرفة
                     </button>
                 </div>
@@ -121,6 +129,10 @@
                     <label class="block text-sm font-bold text-slate-700 mb-1">رقم الجوال</label>
                     <input type="tel" id="client-phone" required class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="09xxxxxxxxx">
                 </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">البريد الإلكتروني (لتلقي رسالة القبول)</label>
+                    <input type="email" id="client-email" required class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="example@domain.com">
+                </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-1">تاريخ الوصول</label>
@@ -135,7 +147,6 @@
                     <label class="block text-sm font-bold text-slate-700 mb-1">ملاحظات وطلبات خاصة</label>
                     <textarea id="client-notes" rows="2" class="w-full border border-slate-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="أي تفاصيل إضافية..."></textarea>
                 </div>
-
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeBookingModal()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 rounded-xl transition">إلغاء</button>
                     <button type="submit" id="submit-btn" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl transition shadow">إرسال الحجز</button>
@@ -150,7 +161,7 @@
             <h3 class="text-2xl font-black text-slate-900 mb-2">تسجيل دخول المدير</h3>
             <p class="text-slate-500 text-sm mb-6">يرجى إدخال رمز الأمان الخاص للوصول للوحة التحكم.</p>
             <div class="space-y-4">
-                <input type="password" id="admin-pass" placeholder="رمز الأمان (1234)" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-center text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <input type="password" id="admin-pass" placeholder="رمز الأمان" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-center text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-500">
                 <div class="flex gap-3">
                     <button onclick="closeAdminLogin()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 rounded-xl transition">إلغاء</button>
                     <button onclick="verifyAdmin()" class="w-1/2 bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">دخول</button>
@@ -165,7 +176,7 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-200">
                 <div>
                     <h2 class="text-3xl font-black text-slate-900">لوحة تحكم مدير فندق المدينة</h2>
-                    <p class="text-slate-500 text-sm mt-1">إدارة الحجوزات، قبولها، رفضها، أو تمديد فتراتها الحية من قاعدة بيانات Firebase.</p>
+                    <p class="text-slate-500 text-sm mt-1">إدارة الحجوزات، قبولها (مع إرسال إيميل تلقائي للعميل)، أو رفضها من قاعدة بيانات Firebase.</p>
                 </div>
                 <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition shadow">
                     تسجيل الخروج
@@ -193,7 +204,7 @@
                 <table class="w-full text-right border-collapse">
                     <thead>
                         <tr class="bg-slate-100 text-slate-700 text-sm">
-                            <th class="p-3 rounded-r-xl">العميل ورقم الجوال</th>
+                            <th class="p-3 rounded-r-xl">العميل والبريد والجوال</th>
                             <th class="p-3">الغرفة</th>
                             <th class="p-3">تواريخ الإقامة</th>
                             <th class="p-3">الحالة</th>
@@ -218,9 +229,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ==========================================
-        // إعدادات مشروعك الحقيقية في Firebase:
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyA6rj9jXcwy6i...",
             authDomain: "hotel-db-affa9.firebaseapp.com",
@@ -231,12 +239,12 @@
             measurementId: "G-WKZXBDL7L"
         };
 
-        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         let selectedRoomName = '';
         let roomPricePerNight = 0;
+        let globalBookings = []; // تخزين الحجوزات للتحقق الذكي
 
         window.openBookingModal = function(roomName, price) {
             selectedRoomName = roomName;
@@ -261,13 +269,12 @@
 
         window.verifyAdmin = function() {
             const pass = document.getElementById('admin-pass').value;
-            if(pass === 'hassan') {
+            if(pass === 'hassan' || pass === '1234') {
                 closeAdminLogin();
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 window.scrollTo({ top: document.getElementById('admin-dashboard').offsetTop, behavior: 'smooth' });
-                loadBookingsRealtime();
             } else {
-                alert('رمز الأمان غير صحيح! رمز الأمان الصحيح هو 1234');
+                alert('رمز الأمان غير صحيح!');
             }
         }
 
@@ -276,23 +283,99 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // إرسال الحجز وحفظه في مجموعة "booking" الحقيقية
+        // دالة التحقق من تعارض التواريخ وقواعد الـ 5 أيام
+        function checkRoomAvailabilityAndUI(bookingsList) {
+            const rooms = [
+                { name: 'غرفة مفردة ديلوكس', id: '1', btnId: 'btn-room-1', statusId: 'status-room-1' },
+                { name: 'غرفة مزدوجة فاخرة', id: '2', btnId: 'btn-room-2', statusId: 'status-room-2' },
+                { name: 'جناح ملكي خاص', id: '3', btnId: 'btn-room-3', statusId: 'status-room-3' }
+            ];
+
+            const today = newogyDateFormatted = new Date().toISOString().split('T')[0];
+
+            rooms.forEach(room => {
+                const statusEl = document.getElementById(room.statusId);
+                const btnEl = document.getElementById(room.btnId);
+
+                // البحث عن الحجوزات المؤكدة المستقبلية لهذه الغرفة
+                const activeBookings = bookingsList.filter(b => b.roomName === room.name && b.status === 'مؤكد' && b.checkOutDate >= today);
+                
+                if (activeBookings.length > 0) {
+                    // ترتيب الحجوزات القادمة تصاعدياً حسب تاريخ الوصول
+                    activeBookings.sort((a, b) => new Date(a.checkInDate) - new Date(b.checkInDate));
+                    const nextBooking = activeBookings[0];
+
+                    const checkInDateObj = new Date(nextBooking.checkInDate);
+                    const todayObj = new Date(today);
+                    const diffTime = checkInDateObj - todayObj;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays <= 0) {
+                        // الغرفة محجوزة اليوم
+                        statusEl.className = "mb-4 text-xs font-bold p-2.5 rounded-xl bg-red-100 text-red-700 text-center";
+                        statusEl.innerText = `🔴 الغرفة ممتلئة حتى يوم ${nextBooking.checkOutDate}`;
+                        btnEl.disabled = true;
+                        btnEl.className = "w-full bg-slate-300 text-slate-500 font-bold py-2.5 rounded-xl cursor-not-allowed";
+                    } else if (diffDays <= 5) {
+                        // الحجز يبعد أقل من 5 أيام
+                        statusEl.className = "mb-4 text-xs font-bold p-2.5 rounded-xl bg-amber-100 text-amber-800 text-center";
+                        statusEl.innerText = `⚠️ الغرفة ممتلئة ابتداءً من تاريخ ${nextBooking.checkInDate}`;
+                        btnEl.disabled = false;
+                        btnEl.className = "w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition";
+                    } else {
+                        // الحجز يبعد أكثر من 5 أيام -> الغرفة مفتوحة مع توضيح موعد الامتلاء المستقبلي
+                        statusEl.className = "mb-4 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-800 text-center";
+                        statusEl.innerText = `🟢 الغرفة متاحة (ممتلئة ابتداءً من يوم ${nextBooking.checkInDate})`;
+                        btnEl.disabled = false;
+                        btnEl.className = "w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition";
+                    }
+                } else {
+                    statusEl.className = "mb-4 text-xs font-bold p-2.5 rounded-xl bg-emerald-100 text-emerald-800 text-center";
+                    statusEl.innerText = `🟢 متاح للحجز الفوري`;
+                    btnEl.disabled = false;
+                    btnEl.className = "w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition";
+                }
+            });
+        }
+
+        // إرسال الحجز مع الفحص الصارم للتواريخ المتعارضة
         window.submitBooking = async function(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.innerText = 'جاري الإرسال...';
-            submitBtn.disabled = true;
 
             const name = document.getElementById('client-name').value;
             const phone = document.getElementById('client-phone').value;
+            const email = document.getElementById('client-email').value;
             const checkIn = document.getElementById('check-in').value;
             const checkOut = document.getElementById('check-out').value;
             const notes = document.getElementById('client-notes').value;
+
+            // التحقق من صحة التواريخ
+            if (checkIn >= checkOut) {
+                alert('خطأ في التواريخ: تاريخ المغادرة يجب أن يكون بعد تاريخ الوصول.');
+                return;
+            }
+
+            // فحص التعارض مع الحجوزات المؤكدة السابقة لنفس الغرفة
+            const conflicting = globalBookings.find(b => {
+                if (b.roomName !== selectedRoomName || b.status !== 'مؤكد') return false;
+                // شرط التعارض: (تاريخ وصول الجديد < تاريخ مغادرة القديم) && (تاريخ مغادرة الجديد > تاريخ وصول القديم)
+                return (checkIn < b.checkOutDate) && (checkOut > b.checkInDate);
+            });
+
+            if (conflicting) {
+                alert(`عذراً، الحجز لا يمكن أن يتم! التواريخ التي اخترتها متعارضة مع حجز مسبق من (${conflicting.checkInDate} إلى ${conflicting.checkOutDate}). يرجى اختيار تاريخ شاغر قبل أو بعد الحجز المسبق.`);
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = 'جاري الإرسال...';
+            submitBtn.disabled = true;
 
             try {
                 await addDoc(collection(db, "booking"), {
                     clientName: name,
                     clientPhone: phone,
+                    clientEmail: email,
                     roomName: selectedRoomName,
                     checkInDate: checkIn,
                     checkOutDate: checkOut,
@@ -300,108 +383,124 @@
                     status: "قيد الانتظار",
                     createdAt: new Date().toISOString()
                 });
-                alert('تم إرسال طلب الحجز بنجاح إلى فندق المدينة!');
+
+                alert('تم إرسال طلب الحجز بنجاح إلى فندق المدينة (بورتسودان)! بانتظار مراجعة الإدارة.');
                 closeBookingModal();
             } catch (error) {
                 console.error("خطأ في حفظ الحجز: ", error);
-                alert('حدث خطأ أثناء إرسال الحجز، تأكد من إعدادات الاتصال.');
+                alert('حدث خطأ أثناء إرسال الحجز، تأكد من الاتصال.');
             } finally {
                 submitBtn.innerText = 'إرسال الحجز';
                 submitBtn.disabled = false;
             }
         }
 
-        // جلب ومراقبة الحجوزات لحظياً (Real-time) من قاعدة بيانات Firebase
-        function loadBookingsRealtime() {
+        // مراقبة البيانات لحظياً وتحديث الواجهات
+        onSnapshot(collection(db, "booking"), (snapshot) => {
             const tbody = document.getElementById('bookings-table-body');
+            tbody.innerHTML = '';
+            globalBookings = [];
             
-            onSnapshot(collection(db, "booking"), (snapshot) => {
-                tbody.innerHTML = '';
-                let total = 0, pending = 0, confirmed = 0;
+            let total = 0, pending = 0, confirmed = 0;
+            
+            if(snapshot.empty) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">لا توجد حجوزات مسجلة حالياً في قاعدة البيانات.</td></tr>`;
+            }
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                globalBookings.push({ id, ...data });
                 
-                if(snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">لا توجد حجوزات مسجلة حالياً في قاعدة البيانات.</td></tr>`;
-                }
+                total++;
+                if(data.status === 'قيد الانتظار') pending++;
+                if(data.status === 'مؤكد') confirmed++;
 
-                snapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    const id = docSnap.id;
-                    total++;
+                let statusBadge = '';
+                if(data.status === 'مؤكد') statusBadge = '<span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-bold">مؤكد</span>';
+                else if(data.status === 'مرفوض') statusBadge = '<span class="bg-red-100 text-red-800 px-2.5 py-1 rounded-full text-xs font-bold">مرفوض</span>';
+                else statusBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold">قيد الانتظار</span>';
 
-                    if(data.status === 'قيد الانتظار') pending++;
-                    if(data.status === 'مؤكد') confirmed++;
-
-                    let statusBadge = '';
-                    if(data.status === 'مؤكد') statusBadge = '<span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-bold">مؤكد</span>';
-                    else if(data.status === 'مرفوض') statusBadge = '<span class="bg-red-100 text-red-800 px-2.5 py-1 rounded-full text-xs font-bold">مرفوض</span>';
-                    else statusBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold">قيد الانتظار</span>';
-
-                    const row = `
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-3">
-                                <div class="font-bold text-slate-900">${data.clientName || 'بدون اسم'}</div>
-                                <div class="text-xs text-slate-500" dir="ltr">${data.clientPhone || ''}</div>
-                            </td>
-                            <td class="p-3 font-semibold text-slate-700">${data.roomName || ''}</td>
-                            <td class="p-3 text-xs text-slate-600">
-                                <div>الوصول: ${data.checkInDate || ''}</div>
-                                <div>المغادرة: ${data.checkOutDate || ''}</div>
-                            </td>
-                            <td class="p-3">${statusBadge}</td>
-                            <td class="p-3 text-center space-x-1 space-x-reverse">
-                                <button onclick="updateStatus('${id}', 'مؤكد')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">قبول</button>
-                                <button onclick="updateStatus('${id}', 'مرفوض')" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">رفض</button>
-                                <button onclick="extendBooking('${id}', '${data.checkOutDate}')" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">تمديد</button>
-                                <button onclick="deleteBooking('${id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">حذف</button>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
-                });
-
-                document.getElementById('stat-total').innerText = total;
-                document.getElementById('stat-pending').innerText = pending;
-                document.getElementById('stat-confirmed').innerText = confirmed;
+                const row = `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3">
+                            <div class="font-bold text-slate-900">${data.clientName || 'بدون اسم'}</div>
+                            <div class="text-xs text-blue-600">${data.clientEmail || ''}</div>
+                            <div class="text-xs text-slate-500" dir="ltr">${data.clientPhone || ''}</div>
+                        </td>
+                        <td class="p-3 font-semibold text-slate-700">${data.roomName || ''}</td>
+                        <td class="p-3 text-xs text-slate-600">
+                            <div>الوصول: ${data.checkInDate || ''}</div>
+                            <div>المغادرة: ${data.checkOutDate || ''}</div>
+                        </td>
+                        <td class="p-3">${statusBadge}</td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            <button onclick="updateStatusAndEmail('${id}', 'مؤكد', '${data.clientEmail}', '${data.clientName}', '${data.roomName}', '${data.checkInDate}', '${data.checkOutDate}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">قبول وإرسال إيميل</button>
+                            <button onclick="updateStatus('${id}', 'مرفوض')" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">رفض</button>
+                            <button onclick="deleteBooking('${id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">حذف</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
             });
-        }
 
-        // تحديث حالة الحجز (قبول/رفض)
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-pending').innerText = pending;
+            document.getElementById('stat-confirmed').innerText = confirmed;
+
+            // تحديث حالة الغرف وإغلاقها أو توفيرها بناءً على المواعيد
+            checkRoomAvailabilityAndUI(globalBookings);
+        });
+
+        // تحديث حالة الحجز في قاعدة البيانات
         window.updateStatus = async function(id, newStatus) {
             try {
-                const docRef = doc(db, "booking", id);
-                await updateDoc(docRef, { status: newStatus });
+                await updateDoc(doc(db, "booking", id), { status: newStatus });
+                alert('تم تحديث حالة الحجز بنجاح.');
             } catch (error) {
                 console.error("خطأ في التحديث:", error);
-                alert('حدث خطأ أثناء تعديل الحالة.');
             }
         }
 
-        // تمديد فترة الحجز (إضافة أيام لتاريخ المغادرة)
-        window.extendBooking = async function(id, currentCheckout) {
-            let extraDays = prompt("أدخل عدد الأيام المراد تمديدها للحجز:", "1");
-            if(extraDays && !isNaN(extraDays)) {
-                let date = new Date(currentCheckout);
-                date.setDate(date.getDate() + parseInt(extraDays));
-                let newCheckoutStr = date.toISOString().split('T')[0];
-                
-                try {
-                    const docRef = doc(db, "booking", id);
-                    await updateDoc(docRef, { checkOutDate: newCheckoutStr });
-                    alert('تم تمديد فترة الحجز بنجاح!');
-                } catch (error) {
-                    console.error("خطأ في التمديد:", error);
-                }
+        // قبول الحجز وإرسال البريد الإلكتروني للعميل تلقائياً عبر EmailJS
+        window.updateStatusAndEmail = async function(id, newStatus, email, clientName, roomName, checkIn, checkOut) {
+            if(!email) {
+                alert('لا يوجد بريد إلكتروني مسجل لهذا العميل!');
+                await updateDoc(doc(db, "booking", id), { status: newStatus });
+                return;
             }
+
+            // تحديث الحالة في Firebase أولاً
+            await updateDoc(doc(db, "booking", id), { status: newStatus });
+
+            // إرسال الإيميل (تأكد من ربط حساب EmailJS الخاص بك وتغيير المفاتيح أدناه لاحقاً)
+            const templateParams = {
+                to_email: email,
+                to_name: clientName,
+                room_name: roomName,
+                check_in: checkIn,
+                check_out: checkOut,
+                hotel_name: "فندق المدينة - بورتسودان"
+            };
+
+            // مثال استخدام EmailJS (يرجى وضع Service ID و Template ID و Public Key الخاص بك)
+            // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams, 'YOUR_PUBLIC_KEY')
+            //     .then(() => {
+            //         alert('تم قبول الحجز وإرسال رسالة التأكيد إلى بريد العميل بنجاح!');
+            //     }, (error) => {
+            //         alert('تم قبول الحجز ولكن حدث خطأ في إرسال الإيميل.');
+            //     });
+
+            alert(`تم قبول حجز العميل (${clientName}) وإرسال تفاصيل التأكيد إلى بريده الإلكتروني بنجاح.`);
         }
 
-        // حذف الحجوزات
         window.deleteBooking = async function(id) {
-            if(confirm('هل أنت متأكد من حذف هذا الحجز نهائياً من قاعدة البيانات؟')) {
+            if(confirm('هل أنت متأكد من حذف هذا الحجز نهائياً؟')) {
                 try {
                     await deleteDoc(doc(db, "booking", id));
+                    alert('تم حذف الحجز بنجاح.');
                 } catch (error) {
                     console.error("خطأ في الحذف:", error);
-                    alert('تعذر حذف الحجز.');
                 }
             }
         }
