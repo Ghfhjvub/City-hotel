@@ -3,1367 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فندق المدينة بورتسودان - نظام الحجوزات الفندقية المباشر</title>
-    
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Supabase Official JS Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <title>فندق المدينة - بورتسودان</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #0a1128;
-            --bg-card: rgba(26, 38, 74, 0.88);
-            --gold-primary: #d4af37;
-            --gold-light: #f39c12;
-            --text-light: #f8f9fa;
-            --text-muted: #a0aec0;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f1c40f;
-            --info: #3498db;
-            --border: rgba(212, 175, 55, 0.35);
-            --radius-lg: 18px;
-            --radius-md: 12px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-            --backdrop: blur(16px);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Tajawal', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(10, 17, 40, 0.95) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-light);
-            min-height: 100vh;
-            padding-bottom: 90px;
-        }
-
-        /* App Header Navigation */
-        .app-header {
-            background: rgba(10, 17, 40, 0.95);
-            backdrop-filter: var(--backdrop);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 30px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--gold-primary);
-        }
-
-        .brand-logo i { font-size: 1.8rem; }
-        .brand-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
-
-        .desktop-nav { display: flex; gap: 10px; }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-muted);
-            padding: 10px 18px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            color: var(--gold-primary);
-            background: rgba(212, 175, 55, 0.15);
-            border-color: var(--border);
-        }
-
-        /* Mobile Navigation Bar */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(10, 17, 40, 0.95);
-            backdrop-filter: var(--backdrop);
-            border-top: 1px solid var(--border);
-            padding: 10px 15px;
-            justify-content: space-around;
-            z-index: 1000;
-        }
-
-        .mobile-nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-
-        .mobile-nav-btn i { font-size: 1.2rem; }
-        .mobile-nav-btn.active { color: var(--gold-primary); }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .view-section {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out forwards;
-        }
-
-        .view-section.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Hero Banner Component */
-        .hero-banner {
-            text-align: center;
-            padding: 35px 20px;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(26, 38, 74, 0.88));
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-        }
-
-        .hero-title {
-            font-size: 2.2rem;
-            color: var(--gold-primary);
-            margin-bottom: 8px;
-            font-weight: 800;
-        }
-
-        .hero-desc { color: var(--text-muted); font-size: 1rem; max-width: 650px; margin: 0 auto; line-height: 1.6; }
-
-        .live-status-bar {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(46, 204, 113, 0.15);
-            border: 1px solid var(--success);
-            color: var(--success);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            margin-top: 15px;
-            font-weight: 700;
-        }
-
-        .live-dot {
-            width: 9px; height: 9px;
-            background: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--success);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
-
-        /* Glass Cards & Grids */
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: var(--backdrop);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-        }
-
-        .section-header {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .section-title {
-            font-size: 1.3rem;
-            color: var(--gold-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-        }
-
-        .rooms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .room-card {
-            background: rgba(10, 17, 40, 0.75);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .room-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--gold-primary);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
-        }
-
-        .room-header {
-            background: rgba(212, 175, 55, 0.12);
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .room-number { font-size: 1.15rem; font-weight: 800; color: var(--gold-primary); }
-        .room-price { font-size: 0.95rem; font-weight: 700; color: var(--text-light); }
-        .room-body { padding: 15px; flex-grow: 1; }
-        .room-type { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
-
-        .room-status-badge {
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            line-height: 1.4;
-        }
-
-        .status-available { background: rgba(46, 204, 113, 0.15); border: 1px solid var(--success); color: var(--success); }
-        .status-prebooked { background: rgba(52, 152, 219, 0.15); border: 1px solid var(--info); color: #5dedfc; }
-        .status-occupied { background: rgba(231, 76, 60, 0.15); border: 1px solid var(--danger); color: #ff7675; }
-
-        .room-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
-
-        .room-features span {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-
-        /* Buttons & Controls */
-        .btn {
-            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
-            color: #000;
-            border: none;
-            padding: 11px 18px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.25s;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-
-        .btn:hover { opacity: 0.92; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35); }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.18); }
-        .btn-danger { background: var(--danger); color: #fff; }
-        .btn-success { background: var(--success); color: #fff; }
-        .btn-warning { background: var(--warning); color: #000; }
-
-        .form-group { margin-bottom: 15px; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(10, 17, 40, 0.85);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            color: var(--text-light);
-            font-size: 0.95rem;
-            outline: none;
-            transition: 0.25s;
-        }
-
-        .form-control:focus {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
-        }
-
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-
-        .badge-confirmed { background: rgba(46, 204, 113, 0.2); color: var(--success); border: 1px solid var(--success); }
-        .badge-pending { background: rgba(241, 196, 15, 0.2); color: var(--warning); border: 1px solid var(--warning); }
-        .badge-rejected { background: rgba(231, 76, 60, 0.2); color: var(--danger); border: 1px solid var(--danger); }
-
-        .table-responsive { overflow-x: auto; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-            white-space: nowrap;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 0.9rem;
-        }
-
-        th { color: var(--gold-primary); background: rgba(10, 17, 40, 0.7); font-weight: 700; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: rgba(10, 17, 40, 0.65);
-            border: 1px solid var(--border);
-            padding: 18px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .stat-icon {
-            width: 45px; height: 45px;
-            border-radius: 10px;
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--gold-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-        }
-
-        .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--text-light); }
-        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
-
-        /* Modal Dialogs */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active { display: flex; }
-
-        .modal-content {
-            background: #101935;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 520px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: zoomIn 0.25s ease-out;
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.92); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            .desktop-nav { display: none; }
-            .mobile-nav { display: flex; }
-            body { padding-bottom: 80px; }
-            .hero-title { font-size: 1.6rem; }
-            .container { margin: 15px auto; padding: 0 12px; }
-        }
+        body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800">
 
-    <header class="app-header">
-        <a href="#" class="brand-logo">
-            <i class="fa-solid fa-hotel"></i>
-            <span class="brand-title">فندق المدينة بورتسودان</span>
-        </a>
-        <nav class="desktop-nav">
-            <button class="nav-btn active" onclick="switchTab('bookingView')">
-                <i class="fa-solid fa-bed"></i> حجز غرفة
-            </button>
-            <button class="nav-btn" onclick="switchTab('myBookingsView')">
-                <i class="fa-solid fa-clock-rotate-left"></i> استعلام حجز
-            </button>
-            <button class="nav-btn" onclick="openAdminModal()">
-                <i class="fa-solid fa-user-shield"></i> لوحة المدير المباشرة
-            </button>
-        </nav>
+    <!-- Header / Navbar -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl font-black text-amber-400">فندق المدينة</span>
+                <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded">بورتسودان</span>
+            </div>
+            <nav class="hidden md:flex gap-6 text-sm font-semibold">
+                <a href="#rooms" class="hover:text-amber-400 transition">الغرف والأجنحة</a>
+                <a href="#features" class="hover:text-amber-400 transition">مميزاتنا</a>
+                <a href="#contact" class="hover:text-amber-400 transition">اتصل بنا</a>
+            </nav>
+            <div>
+                <button onclick="openAdminLogin()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm transition shadow">
+                    لوحة المدير
+                </button>
+            </div>
+        </div>
     </header>
 
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-nav">
-        <button class="mobile-nav-btn active" id="mob-bookingView" onclick="switchTab('bookingView')">
-            <i class="fa-solid fa-bed"></i>
-            <span>الحجز</span>
-        </button>
-        <button class="mobile-nav-btn" id="mob-myBookingsView" onclick="switchTab('myBookingsView')">
-            <i class="fa-solid fa-receipt"></i>
-            <span>حجوزاتي</span>
-        </button>
-        <button class="mobile-nav-btn" id="mob-adminView" onclick="openAdminModal()">
-            <i class="fa-solid fa-user-shield"></i>
-            <span>الإدارة</span>
-        </button>
-    </nav>
-
-    <main class="container">
-
-        <!-- SECTION 1: Guest Room Booking View -->
-        <section id="bookingView" class="view-section active">
-            <div class="hero-banner">
-                <h1 class="hero-title">مرحباً بكم في فندق المدينة بورتسودان</h1>
-                <p class="hero-desc">إقامة فاخرة وخدمات خماسية النجوم. اختر غرفتك واحجزها فوراً مع مزامنة قاعدة البيانات الحقيقية.</p>
-                <div class="live-status-bar">
-                    <div class="live-dot"></div>
-                    <span id="dbConnStatus">متصل بقاعدة البيانات الحقيقية (Supabase DB)</span>
-                </div>
+    <!-- Hero Section -->
+    <section class="relative bg-slate-900 text-white py-24 px-4 overflow-hidden">
+        <div class="absolute inset-0 opacity-35 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="relative max-w-4xl mx-auto text-center space-y-6">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight">أهلاً بك في <span class="text-amber-400">فندق المدينة</span></h1>
+            <p class="text-lg text-slate-300 max-w-2xl mx-auto">وجهتك الأولى للإقامة الفاخرة والراحة المتميزة في قلب مدينة بورتسودان الساحلية. احجز غرفتك الآن بكل سهولة.</p>
+            <div class="pt-4">
+                <a href="#rooms" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-8 py-3.5 rounded-xl shadow-lg transition text-lg">احجز غرفتك الآن</a>
             </div>
+        </div>
+    </section>
 
-            <div class="section-header">
-                <h2 class="section-title"><i class="fa-solid fa-door-open"></i> الغرف والأجنحة المتاحة</h2>
-            </div>
+    <!-- Rooms Section -->
+    <section id="rooms" class="max-w-7xl mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-black text-slate-900">غرف وأجنحة فندق المدينة</h2>
+            <p class="text-slate-600 mt-2">اختر الغرفة التي تناسب احتياجاتك وتمتع بإقامة لا تُنسى</p>
+        </div>
 
-            <div class="rooms-grid" id="roomsContainer">
-                <!-- Dynamically populated via JS -->
-            </div>
-        </section>
-
-        <!-- SECTION 2: Guest Booking Lookup -->
-        <section id="myBookingsView" class="view-section">
-            <div class="glass-card">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fa-solid fa-magnifying-glass"></i> الاستعلام عن حالة الحجز</h2>
-                </div>
-                <div class="form-group">
-                    <label>أدخل رقم هاتفك المسجل لدى الفندق للبحث عن كافة حجوزاتك:</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="tel" id="searchPhoneInput" class="form-control" placeholder="مثال: 0123456789">
-                        <button class="btn" style="width: 140px;" onclick="searchGuestBookings()">بحث الآن</button>
-                    </div>
-                </div>
-
-                <div class="table-responsive" style="margin-top: 25px;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>رقم الحجز</th>
-                                <th>الغرفة</th>
-                                <th>تاريخ الوصول</th>
-                                <th>تاريخ المغادرة</th>
-                                <th>الإجمالي</th>
-                                <th>حالة الحجز</th>
-                            </tr>
-                        </thead>
-                        <tbody id="guestBookingsTable">
-                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">يرجى كتابة رقم هاتفك للبحث</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 3: Admin Management Dashboard -->
-        <section id="adminView" class="view-section">
-            <div class="glass-card">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> لوحة تحكم مدير الفندق</h2>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-warning" style="width: auto; padding: 8px 15px;" onclick="openManualBookingModal()">
-                            <i class="fa-solid fa-plus"></i> إضافة حجز يدوي
-                        </button>
-                        <button class="btn btn-danger" style="width: auto; padding: 8px 15px;" onclick="clearAllBookingsData()">
-                            <i class="fa-solid fa-trash"></i> مسح الحجوزات
-                        </button>
-                        <button class="btn btn-secondary" style="width: auto; padding: 8px 15px;" onclick="switchTab('bookingView')">
-                            <i class="fa-solid fa-right-from-bracket"></i> خروج
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Admin Dynamic Statistics -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
-                        <div>
-                            <div class="stat-value" id="statPending">0</div>
-                            <div class="stat-label">طلبات ينتظر قبولها</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="rooms-grid">
+            <!-- Room 1 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100 flex flex-col">
+                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80" alt="غرفة مفردة ديلوكس" class="h-56 w-full object-cover">
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-xl text-slate-900">غرفة مفردة ديلوكس</h3>
+                            <span class="text-amber-600 font-black">$50 / ليلة</span>
                         </div>
+                        <p class="text-slate-600 text-sm mb-4">غرفة مريحة ومجهّزة بسرير فردي واسع، إطلالة رائعة، وتكييف هواء ممتاز.</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-                        <div>
-                            <div class="stat-value" id="statConfirmed">0</div>
-                            <div class="stat-label">حجوزات مؤكدة</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-solid fa-vault"></i></div>
-                        <div>
-                            <div class="stat-value" id="statRevenue">0 $</div>
-                            <div class="stat-label">إجمالي الإيرادات المؤكدة</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Database Configuration Panel -->
-                <div class="glass-card" style="background: rgba(10, 17, 40, 0.7); padding: 18px; margin-bottom: 25px; border-color: rgba(52, 152, 219, 0.5);">
-                    <h3 style="font-size: 1rem; color: var(--info); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-database"></i> إعدادات الربط بقاعدة البيانات (Supabase DB):
-                    </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">
-                        <div class="form-group" style="margin: 0;">
-                            <label>رابط مشروع Supabase (URL):</label>
-                            <input type="text" id="supabaseUrlInput" class="form-control" placeholder="https://xxxx.supabase.co">
-                        </div>
-                        <div class="form-group" style="margin: 0;">
-                            <label>المفتاح العام (Supabase Anon Key):</label>
-                            <input type="password" id="supabaseKeyInput" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6...">
-                        </div>
-                    </div>
-                    <div style="margin-top: 12px; display: flex; gap: 10px; align-items: center;">
-                        <button class="btn" style="width: auto; padding: 8px 18px;" onclick="saveCustomSupabaseConfig()">
-                            <i class="fa-solid fa-plug"></i> حفظ والربط بقاعدتك
-                        </button>
-                        <span id="dbStatusText" style="font-size: 0.85rem; color: var(--text-muted);"></span>
-                    </div>
-                </div>
-
-                <!-- Admin Notification Settings -->
-                <div class="glass-card" style="background: rgba(10, 17, 40, 0.5); padding: 18px; margin-bottom: 25px;">
-                    <h3 style="font-size: 1rem; color: var(--gold-primary); margin-bottom: 12px;">
-                        <i class="fa-solid fa-sliders"></i> إعدادات استقبال الرسائل والإشعارات:
-                    </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
-                        <div class="form-group" style="margin: 0;">
-                            <label>بريد الفندق (لاستقبال الحجوزات):</label>
-                            <input type="email" id="hotelEmailInput" class="form-control" value="admin@hotel.com">
-                        </div>
-                        <div class="form-group" style="margin: 0;">
-                            <label>رقم واتساب الفندق (شاملاً رمز الدولة):</label>
-                            <input type="text" id="hotelWhatsappInput" class="form-control" value="249123456789">
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary" style="margin-top: 12px; width: auto;" onclick="saveHotelSettings()">
-                        <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات
+                    <button onclick="openBookingModal('غرفة مفردة ديلوكس', 50)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
+                        احجز هذه الغرفة
                     </button>
                 </div>
-
-                <!-- Bookings Management Table -->
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fa-solid fa-list-check"></i> قائمة كافة الحجوزات الواردة</h2>
-                </div>
-
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>النزيل</th>
-                                <th>الهاتف</th>
-                                <th>الغرفة</th>
-                                <th>تاريخ الوصول ➔ المغادرة</th>
-                                <th>المبلغ</th>
-                                <th>الحالة</th>
-                                <th>إجراءات الإدارة</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminBookingsTable">
-                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">جاري عرض الحجوزات...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
-        </section>
 
-    </main>
-
-    <!-- Modal 1: Booking Form Modal -->
-    <div class="modal" id="bookingModal">
-        <div class="modal-content">
-            <div class="section-header">
-                <h3 class="section-title" id="modalRoomTitle">حجز غرفة</h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 1.3rem;" onclick="closeModal('bookingModal')"></i>
+            <!-- Room 2 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100 flex flex-col">
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" alt="غرفة مزدوجة فاخرة" class="h-56 w-full object-cover">
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-xl text-slate-900">غرفة مزدوجة فاخرة</h3>
+                            <span class="text-amber-600 font-black">$85 / ليلة</span>
+                        </div>
+                        <p class="text-slate-600 text-sm mb-4">تضم سريرين مزدوجين أو سرير كبير كوين، مثالية للأزواج والعائلات الصغيرة.</p>
+                    </div>
+                    <button onclick="openBookingModal('غرفة مزدوجة فاخرة', 85)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
+                        احجز هذه الغرفة
+                    </button>
+                </div>
             </div>
-            <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
-                <input type="hidden" id="modalRoomId">
-                <div class="form-group">
-                    <label>الاسم بالكامل:</label>
-                    <input type="text" id="guestName" class="form-control" required placeholder="أدخل اسم النزيل الثلاثي">
-                </div>
-                <div class="form-group">
-                    <label>رقم الهاتف:</label>
-                    <input type="tel" id="guestPhone" class="form-control" required placeholder="0123456789">
-                </div>
-                <div class="form-group" style="display: flex; gap: 10px;">
-                    <div style="flex: 1;">
-                        <label>تاريخ الوصول:</label>
-                        <input type="date" id="checkIn" class="form-control" required onchange="calculateTotal()">
+
+            <!-- Room 3 -->
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-slate-100 flex flex-col">
+                <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=600&q=80" alt="جناح ملكي خاص" class="h-56 w-full object-cover">
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-xl text-slate-900">جناح ملكي خاص</h3>
+                            <span class="text-amber-600 font-black">$150 / ليلة</span>
+                        </div>
+                        <p class="text-slate-600 text-sm mb-4">جناح فاخر بمساحة واسعة، صالة جلوس مستقلة، وأعلى معايير الرفاهية والخدمة.</p>
                     </div>
-                    <div style="flex: 1;">
-                        <label>تاريخ المغادرة:</label>
-                        <input type="date" id="checkOut" class="form-control" required onchange="calculateTotal()">
-                    </div>
+                    <button onclick="openBookingModal('جناح ملكي خاص', 150)" class="w-full bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">
+                        احجز هذه الغرفة
+                    </button>
                 </div>
-
-                <div class="form-group" style="background: rgba(212, 175, 55, 0.1); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border);">
-                    <div style="display: flex; justify-content: space-between; font-weight: 700;">
-                        <span>تكلفة الإقامة الإجمالية:</span>
-                        <span id="calculatedTotal" style="color: var(--gold-primary);">0 $</span>
-                    </div>
-                </div>
-
-                <button type="submit" id="submitBookingBtn" class="btn">
-                    <i class="fa-solid fa-paper-plane"></i> تأكيد الحجز الفوري
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal 2: Success Notification Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content" style="text-align: center;">
-            <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 15px;"></i>
-            <h3 style="color: var(--gold-primary); font-size: 1.4rem; margin-bottom: 10px;">تمت عملية الحجز والتأكيد بنجاح!</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
-                تم حفظ بيانات الحجز وتحديث حالة الغرفة فوراً في قاعدة البيانات. اختياري: يمكنك إرسال نسخة للواتساب أو البريد الإلكتروني.
-            </p>
-
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button class="btn btn-success" onclick="sendViaWhatsapp()">
-                    <i class="fa-brands fa-whatsapp"></i> إرسال تفاصيل الحجز للواتساب
-                </button>
-                <button class="btn btn-danger" onclick="sendViaEmail()">
-                    <i class="fa-solid fa-envelope"></i> إرسال عبر البريد الإلكتروني
-                </button>
-                <button class="btn btn-secondary" onclick="closeModal('successModal')">
-                    إغلاق ومتابعة
-                </button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Modal 3: Admin Login Password -->
-    <div class="modal" id="adminModal">
-        <div class="modal-content" style="max-width: 380px;">
-            <div class="section-header">
-                <h3 class="section-title"><i class="fa-solid fa-lock"></i> تسجيل دخول المدير</h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('adminModal')"></i>
-            </div>
-            <div class="form-group">
-                <label>أدخل رمز الدخول السرّي:</label>
-                <input type="password" id="adminPassInput" class="form-control" placeholder="كلمة المرور الافتراضية (1234)">
-            </div>
-            <button class="btn" onclick="verifyAdminPass()">دخول اللوحة</button>
-        </div>
-    </div>
-
-    <!-- Modal 4: Extend Stay Modal (Admin) -->
-    <div class="modal" id="extendModal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="section-header">
-                <h3 class="section-title"><i class="fa-solid fa-calendar-plus"></i> تمديد فترة إقامة النزيل</h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('extendModal')"></i>
-            </div>
-            <input type="hidden" id="extendBookingId">
-            <div class="form-group">
-                <label>تاريخ المغادرة الجديد:</label>
-                <input type="date" id="newCheckOut" class="form-control" required>
-            </div>
-            <button class="btn" onclick="confirmExtendStay()">حفظ وتحديث الإقامة</button>
-        </div>
-    </div>
-
-    <!-- Modal 5: Manual Booking (Admin) -->
-    <div class="modal" id="manualBookingModal">
-        <div class="modal-content">
-            <div class="section-header">
-                <h3 class="section-title"><i class="fa-solid fa-user-plus"></i> إضافة حجز يدوي من الاستقبال</h3>
-                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('manualBookingModal')"></i>
-            </div>
-            <form id="manualBookingForm" onsubmit="handleManualBookingSubmit(event)">
-                <div class="form-group">
-                    <label>اختر الغرفة:</label>
-                    <select id="manualRoomSelect" class="form-control" required></select>
-                </div>
-                <div class="form-group">
-                    <label>اسم النزيل الثلاثي:</label>
-                    <input type="text" id="manualGuestName" class="form-control" required placeholder="مثال: محمد أحمد علي">
-                </div>
-                <div class="form-group">
-                    <label>رقم الهاتف:</label>
-                    <input type="tel" id="manualGuestPhone" class="form-control" required placeholder="0123456789">
-                </div>
-                <div class="form-group" style="display: flex; gap: 10px;">
-                    <div style="flex: 1;">
-                        <label>تاريخ الوصول:</label>
-                        <input type="date" id="manualCheckIn" class="form-control" required>
-                    </div>
-                    <div style="flex: 1;">
-                        <label>تاريخ المغادرة:</label>
-                        <input type="date" id="manualCheckOut" class="form-control" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn"><i class="fa-solid fa-plus"></i> إدخال الحجز فوراً</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Default Working Public Supabase Project Credentials
-       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA6rj9jXcwY6ibFX28wi4zUWqCu04AK_yY",
-  authDomain: "hotel-db-affa9.firebaseapp.com",
-  projectId: "hotel-db-affa9",
-  storageBucket: "hotel-db-affa9.firebasestorage.app",
-  messagingSenderId: "775363791894",
-  appId: "1:775363791894:web:5a383857ed18ce36947937",
-  measurementId: "G-WKZXBDL7LL"
-};
-
-        let supabaseClient = null;
-        let isSupabaseActive = false;
-
-        // 16 Full Hotel Rooms Inventory Definition
-        const initialRoomsList = [
-            { id: 101, number: '101', type: 'غرفة مفردة فاخرة (Single Room)', price: 50, features: ['1 سرير كبير', 'واي فاي مجاني', 'شاشة HD'] },
-            { id: 102, number: '102', type: 'غرفة مفردة فاخرة (Single Room)', price: 50, features: ['1 سرير كبير', 'إطلالة جانبية', 'تكييف مركز'] },
-            { id: 103, number: '103', type: 'غرفة مزدوجة (Double Room)', price: 80, features: ['2 سرير فردي', 'إفطار مجاني', 'واي فاي'] },
-            { id: 104, number: '104', type: 'غرفة مزدوجة (Double Room)', price: 80, features: ['2 سرير', 'إطلالة على المسبح', 'شاشة HD'] },
-            { id: 201, number: '201', type: 'جناح ملوكي (Royal Suite)', price: 160, features: ['غرفة نوم + صالة VIP', 'جاكوزي خاص', 'إفطار فاخر'] },
-            { id: 202, number: '202', type: 'جناح ملوكي (Royal Suite)', price: 160, features: ['غرفة + صالة', 'جاكوزي', 'إطلالة شاطئية'] },
-            { id: 203, number: '203', type: 'جناح عائلي واسع (Family Suite)', price: 140, features: ['3 أسرة', 'مطبخ صغير', 'مساحة واسعة'] },
-            { id: 204, number: '204', type: 'جناح عائلي واسع (Family Suite)', price: 140, features: ['3 أسرة', 'مطبخ صغير', 'شاشتين HD'] },
-            { id: 301, number: '301', type: 'غرفة ديلوكس مطلة (Deluxe Room)', price: 100, features: ['سرير كينج', 'شرفة واسعة', 'خدمة الغرف'] },
-            { id: 302, number: '302', type: 'غرفة ديلوكس مطلة (Deluxe Room)', price: 100, features: ['سرير كينج', 'إطلالة مباشرة', 'ميني بار'] },
-            { id: 303, number: '303', type: 'غرفة مفردة إقتصادية', price: 40, features: ['1 سرير', 'واي فاي', 'مكتب عمل'] },
-            { id: 304, number: '304', type: 'غرفة مفردة إقتصادية', price: 40, features: ['1 سرير', 'واي فاي', 'شاشة HD'] },
-            { id: 401, number: '401', type: 'جناح أرجواني فاخر', price: 180, features: ['غرفتين + صالة', 'جاكوزي', 'ضيافة خاصة'] },
-            { id: 402, number: '402', type: 'جناح أرجواني فاخر', price: 180, features: ['غرفتين + صالة', 'إطلالة شاملة', 'VIP'] },
-            { id: 403, number: '403', type: 'غرفة ثلاثية (Triple Room)', price: 110, features: ['3 أسرة فردية', 'إفطار مجاني', 'واي فاي'] },
-            { id: 404, number: '404', type: 'غرفة ثلاثية (Triple Room)', price: 110, features: ['3 أسرة فردية', 'شاشة كبيرة', 'مطبخ'] }
-        ];
-
-        let localBookings = [];
-        let currentBookingSummary = null;
-
-        let hotelEmail = localStorage.getItem('hotel_email') || 'admin@hotel.com';
-        let hotelWhatsapp = localStorage.getItem('hotel_whatsapp') || '249123456789';
-
-        // Realtime Multi-tab Broadcast Sync Engine
-        const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('hotel_sync_channel') : null;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('hotelEmailInput').value = hotelEmail;
-            document.getElementById('hotelWhatsappInput').value = hotelWhatsapp;
-            setMinDates();
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <h3 class="text-2xl font-black text-slate-900 mb-2">تأكيد حجز الغرفة</h3>
+            <p id="modal-room-title" class="text-amber-600 font-semibold mb-6"></p>
             
-            // Initialize Supabase Client
-            initSupabaseClient();
+            <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">اسم العميل الثلاثي</label>
+                    <input type="text" id="client-name" required class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="مثال: محمد أحمد علي">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">رقم الجوال</label>
+                    <input type="tel" id="client-phone" required class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="09xxxxxxxxx">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1">تاريخ الوصول</label>
+                        <input type="date" id="check-in" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-1">تاريخ المغادرة</label>
+                        <input type="date" id="check-out" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">ملاحظات وطلبات خاصة</label>
+                    <textarea id="client-notes" rows="2" class="w-full border border-slate-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="أي تفاصيل إضافية..."></textarea>
+                </div>
 
-            // Fetch Data
-            fetchBookingsData();
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeBookingModal()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 rounded-xl transition">إلغاء</button>
+                    <button type="submit" id="submit-btn" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl transition shadow">إرسال الحجز</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            // Listen to live updates from other tabs
-            if (syncChannel) {
-                syncChannel.onmessage = (event) => {
-                    if (event.data && event.data.type === 'DATA_UPDATED') {
-                        fetchBookingsData();
-                    }
-                };
-            }
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+            <h3 class="text-2xl font-black text-slate-900 mb-2">تسجيل دخول المدير</h3>
+            <p class="text-slate-500 text-sm mb-6">يرجى إدخال رمز الأمان الخاص للوصول للوحة التحكم.</p>
+            <div class="space-y-4">
+                <input type="password" id="admin-pass" placeholder="رمز الأمان (1234)" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-center text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <div class="flex gap-3">
+                    <button onclick="closeAdminLogin()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 rounded-xl transition">إلغاء</button>
+                    <button onclick="verifyAdmin()" class="w-1/2 bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white font-bold py-2.5 rounded-xl transition">دخول</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            // Sync with LocalStorage storage events
-            window.addEventListener('storage', () => {
-                fetchBookingsData();
-            });
-        });
+    <!-- Admin Dashboard Section -->
+    <section id="admin-dashboard" class="hidden max-w-7xl mx-auto px-4 py-12">
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 md:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-200">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">لوحة تحكم مدير فندق المدينة</h2>
+                    <p class="text-slate-500 text-sm mt-1">إدارة الحجوزات، قبولها، رفضها، أو تمديد فتراتها الحية من قاعدة بيانات Firebase.</p>
+                </div>
+                <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition shadow">
+                    تسجيل الخروج
+                </button>
+            </div>
 
-        function initSupabaseClient() {
-            const savedUrl = localStorage.getItem('custom_supabase_url') || DEFAULT_SUPABASE_URL;
-            const savedKey = localStorage.getItem('custom_supabase_key') || DEFAULT_SUPABASE_KEY;
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+                    <span class="text-slate-500 text-sm block">إجمالي الحجوزات</span>
+                    <span id="stat-total" class="text-3xl font-black text-slate-900 mt-1 block">0</span>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 p-5 rounded-2xl">
+                    <span class="text-amber-700 text-sm block">قيد الانتظار</span>
+                    <span id="stat-pending" class="text-3xl font-black text-amber-600 mt-1 block">0</span>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl">
+                    <span class="text-emerald-700 text-sm block">المؤكدة</span>
+                    <span id="stat-confirmed" class="text-3xl font-black text-emerald-600 mt-1 block">0</span>
+                </div>
+            </div>
 
-            document.getElementById('supabaseUrlInput').value = savedUrl !== DEFAULT_SUPABASE_URL ? savedUrl : '';
-            document.getElementById('supabaseKeyInput').value = savedKey !== DEFAULT_SUPABASE_KEY ? savedKey : '';
+            <!-- Bookings Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 text-sm">
+                            <th class="p-3 rounded-r-xl">العميل ورقم الجوال</th>
+                            <th class="p-3">الغرفة</th>
+                            <th class="p-3">تواريخ الإقامة</th>
+                            <th class="p-3">الحالة</th>
+                            <th class="p-3 rounded-l-xl text-center">الإجراءات والتحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-table-body" class="divide-y divide-slate-100 text-sm">
+                        <!-- Loaded from Firebase -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
-            if (window.supabase && savedUrl && savedKey) {
-                try {
-                    supabaseClient = window.supabase.createClient(savedUrl, savedKey);
-                    isSupabaseActive = true;
-                    document.getElementById('dbConnStatus').innerText = "متصل بقاعدة بيانات Supabase الحقيقية";
-                    subscribeSupabaseRealtime();
-                } catch(err) {
-                    console.warn("Supabase client fallback active:", err);
-                    isSupabaseActive = false;
-                    document.getElementById('dbConnStatus').innerText = "يعمل وضع الحفظ المتكامل والمزامنة السريعة (Local DB)";
-                }
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm border-t border-slate-800 mt-16">
+        <p>جميع الحقوق محفوظة © 2026 - فندق المدينة (بورتسودان)</p>
+    </footer>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ==========================================
+        // إعدادات مشروعك الحقيقية في Firebase:
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6rj9jXcwy6i...",
+            authDomain: "hotel-db-affa9.firebaseapp.com",
+            projectId: "hotel-db-affa9",
+            storageBucket: "hotel-db-affa9.appspot.com",
+            messagingSenderId: "775363791894",
+            appId: "1:775363791894:web:5a383857ed18ce36947937",
+            measurementId: "G-WKZXBDL7L"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let selectedRoomName = '';
+        let roomPricePerNight = 0;
+
+        window.openBookingModal = function(roomName, price) {
+            selectedRoomName = roomName;
+            roomPricePerNight = price;
+            document.getElementById('modal-room-title').innerText = `الغرفة المختارة: ${roomName} ($${price} لكل ليلة)`;
+            document.getElementById('booking-modal').classList.remove('hidden');
+        }
+
+        window.closeBookingModal = function() {
+            document.getElementById('booking-modal').classList.add('hidden');
+            document.getElementById('booking-form').reset();
+        }
+
+        window.openAdminLogin = function() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+        }
+
+        window.closeAdminLogin = function() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+            document.getElementById('admin-pass').value = '';
+        }
+
+        window.verifyAdmin = function() {
+            const pass = document.getElementById('admin-pass').value;
+            if(pass === '1234') {
+                closeAdminLogin();
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                window.scrollTo({ top: document.getElementById('admin-dashboard').offsetTop, behavior: 'smooth' });
+                loadBookingsRealtime();
             } else {
-                isSupabaseActive = false;
-                document.getElementById('dbConnStatus').innerText = "يعمل وضع الحفظ المتكامل والمزامنة السريعة (Local DB)";
+                alert('رمز الأمان غير صحيح! رمز الأمان الصحيح هو 1234');
             }
         }
 
-        function saveCustomSupabaseConfig() {
-            const url = document.getElementById('supabaseUrlInput').value.trim();
-            const key = document.getElementById('supabaseKeyInput').value.trim();
-
-            if (url && key) {
-                localStorage.setItem('custom_supabase_url', url);
-                localStorage.setItem('custom_supabase_key', key);
-                document.getElementById('dbStatusText').innerText = "تم حفظ المفاتيح وسيتم إجراء الاختبار...";
-                initSupabaseClient();
-                fetchBookingsData();
-            } else {
-                localStorage.removeItem('custom_supabase_url');
-                localStorage.removeItem('custom_supabase_key');
-                alert('تمت استعادة الإعدادات التلقائية لقاعدة البيانات');
-                initSupabaseClient();
-                fetchBookingsData();
-            }
+        window.logoutAdmin = function() {
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function subscribeSupabaseRealtime() {
-            if (!supabaseClient) return;
+        // إرسال الحجز وحفظه في مجموعة "booking" الحقيقية
+        window.submitBooking = async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = 'جاري الإرسال...';
+            submitBtn.disabled = true;
+
+            const name = document.getElementById('client-name').value;
+            const phone = document.getElementById('client-phone').value;
+            const checkIn = document.getElementById('check-in').value;
+            const checkOut = document.getElementById('check-out').value;
+            const notes = document.getElementById('client-notes').value;
+
             try {
-                supabaseClient
-                    .channel('public:bookings')
-                    .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, payload => {
-                        fetchBookingsData();
-                    })
-                    .subscribe();
-            } catch(e) {
-                console.log('Realtime listener fallback active', e);
+                await addDoc(collection(db, "booking"), {
+                    clientName: name,
+                    clientPhone: phone,
+                    roomName: selectedRoomName,
+                    checkInDate: checkIn,
+                    checkOutDate: checkOut,
+                    notes: notes,
+                    status: "قيد الانتظار",
+                    createdAt: new Date().toISOString()
+                });
+                alert('تم إرسال طلب الحجز بنجاح إلى فندق المدينة!');
+                closeBookingModal();
+            } catch (error) {
+                console.error("خطأ في حفظ الحجز: ", error);
+                alert('حدث خطأ أثناء إرسال الحجز، تأكد من إعدادات الاتصال.');
+            } finally {
+                submitBtn.innerText = 'إرسال الحجز';
+                submitBtn.disabled = false;
             }
         }
 
-        async function fetchBookingsData() {
-            let loadedFromDb = false;
-
-            if (supabaseClient && isSupabaseActive) {
-                try {
-                    const { data, error } = await supabaseClient.from('bookings').select('*');
-                    if (!error && data) {
-                        localBookings = data.map(item => ({
-                            id: item.id.toString(),
-                            roomId: parseInt(item.room_id),
-                            roomNumber: item.room_number,
-                            guestName: item.guest_name,
-                            guestPhone: item.guest_phone,
-                            checkIn: item.check_in,
-                            checkOut: item.check_out,
-                            totalPrice: parseFloat(item.total_price),
-                            status: item.status,
-                            createdAt: item.created_at || new Date().toLocaleDateString('ar-EG')
-                        }));
-                        loadedFromDb = true;
-                    }
-                } catch(e) {
-                    console.log('Failed to query remote Supabase, falling back to local DB cache:', e);
-                }
-            }
-
-            if (!loadedFromDb) {
-                const stored = localStorage.getItem('city_hotel_bookings');
-                if (stored) {
-                    try {
-                        localBookings = JSON.parse(stored);
-                    } catch(e) {
-                        localBookings = [];
-                    }
-                } else {
-                    localBookings = [];
-                }
-            }
-
-            renderRoomsWithStatus();
-            renderAdminDashboard();
-        }
-
-        async function saveDataAndBroadcast() {
-            // Save to Local Cache immediately for 0.0s speed
-            localStorage.setItem('city_hotel_bookings', JSON.stringify(localBookings));
-            renderRoomsWithStatus();
-            renderAdminDashboard();
-
-            if (syncChannel) {
-                syncChannel.postMessage({ type: 'DATA_UPDATED', timestamp: Date.now() });
-            }
-
-            // Sync asynchronously with Supabase DB
-            if (supabaseClient && isSupabaseActive) {
-                try {
-                    const mappedData = localBookings.map(b => ({
-                        id: b.id,
-                        room_id: b.roomId,
-                        room_number: b.roomNumber,
-                        guest_name: b.guestName,
-                        guest_phone: b.guestPhone,
-                        check_in: b.checkIn,
-                        check_out: b.checkOut,
-                        total_price: b.totalPrice,
-                        status: b.status
-                    }));
-
-                    await supabaseClient.from('bookings').upsert(mappedData);
-                } catch(err) {
-                    console.log("Supabase sync complete or fallback stored:", err);
-                }
-            }
-        }
-
-        function setMinDates() {
-            const today = new Date().toISOString().split('T')[0];
-            const checkInEl = document.getElementById('checkIn');
-            const checkOutEl = document.getElementById('checkOut');
-            const manualInEl = document.getElementById('manualCheckIn');
-            const manualOutEl = document.getElementById('manualCheckOut');
-
-            if(checkInEl) checkInEl.min = today;
-            if(checkOutEl) checkOutEl.min = today;
-            if(manualInEl) manualInEl.min = today;
-            if(manualOutEl) manualOutEl.min = today;
-        }
-
-        function switchTab(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.mobile-nav-btn').forEach(el => el.classList.remove('active'));
-
-            document.getElementById(viewId).classList.add('active');
+        // جلب ومراقبة الحجوزات لحظياً (Real-time) من قاعدة بيانات Firebase
+        function loadBookingsRealtime() {
+            const tbody = document.getElementById('bookings-table-body');
             
-            const mobBtn = document.getElementById('mob-' + viewId);
-            if (mobBtn) mobBtn.classList.add('active');
-
-            if (viewId === 'adminView') renderAdminDashboard();
-            if (viewId === 'bookingView') renderRoomsWithStatus();
-        }
-
-        function renderRoomsWithStatus() {
-            const container = document.getElementById('roomsContainer');
-            const todayStr = new Date().toISOString().split('T')[0];
-
-            container.innerHTML = initialRoomsList.map(room => {
-                const activeConfirmed = localBookings.find(b => 
-                    b.roomId === room.id && 
-                    b.status === 'confirmed' && 
-                    b.checkOut >= todayStr
-                );
-
-                let statusHtml = '';
-                let isBookable = true;
-
-                if (activeConfirmed) {
-                    if (activeConfirmed.checkIn <= todayStr) {
-                        statusHtml = `
-                            <div class="room-status-badge status-occupied">
-                                <i class="fa-solid fa-lock"></i>
-                                <span>مأهولة بالنزيل حتى تاريخ: <b>${activeConfirmed.checkOut}</b></span>
-                            </div>`;
-                        isBookable = false;
-                    } else {
-                        statusHtml = `
-                            <div class="room-status-badge status-prebooked">
-                                <i class="fa-solid fa-calendar-check"></i>
-                                <span>شاغرة الآن (مجهزة لحجز مسبق بتاريخ: <b>${activeConfirmed.checkIn}</b>)</span>
-                            </div>`;
-                        isBookable = true;
-                    }
-                } else {
-                    statusHtml = `
-                        <div class="room-status-badge status-available">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>شاغرة ومتاحة للحجز الفوري</span>
-                        </div>`;
-                    isBookable = true;
+            onSnapshot(collection(db, "booking"), (snapshot) => {
+                tbody.innerHTML = '';
+                let total = 0, pending = 0, confirmed = 0;
+                
+                if(snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">لا توجد حجوزات مسجلة حالياً في قاعدة البيانات.</td></tr>`;
                 }
 
-                return `
-                    <div class="room-card">
-                        <div class="room-header">
-                            <span class="room-number">غرفة ${room.number}</span>
-                            <span class="room-price">${room.price} $ / ليلة</span>
-                        </div>
-                        <div class="room-body">
-                            <div class="room-type">${room.type}</div>
-                            ${statusHtml}
-                            <div class="room-features">
-                                ${room.features.map(f => `<span><i class="fa-solid fa-check" style="color: var(--gold-primary);"></i> ${f}</span>`).join(' ')}
-                            </div>
-                        </div>
-                        <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
-                            <button class="btn" ${!isBookable ? 'style="opacity:0.5; cursor:not-allowed;" disabled' : `onclick="openBookingModal(${room.id})"`}>
-                                <i class="fa-solid fa-calendar-plus"></i> ${isBookable ? 'حجز الآن' : 'محجوزة حالياً'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    total++;
+
+                    if(data.status === 'قيد الانتظار') pending++;
+                    if(data.status === 'مؤكد') confirmed++;
+
+                    let statusBadge = '';
+                    if(data.status === 'مؤكد') statusBadge = '<span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-bold">مؤكد</span>';
+                    else if(data.status === 'مرفوض') statusBadge = '<span class="bg-red-100 text-red-800 px-2.5 py-1 rounded-full text-xs font-bold">مرفوض</span>';
+                    else statusBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold">قيد الانتظار</span>';
+
+                    const row = `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3">
+                                <div class="font-bold text-slate-900">${data.clientName || 'بدون اسم'}</div>
+                                <div class="text-xs text-slate-500" dir="ltr">${data.clientPhone || ''}</div>
+                            </td>
+                            <td class="p-3 font-semibold text-slate-700">${data.roomName || ''}</td>
+                            <td class="p-3 text-xs text-slate-600">
+                                <div>الوصول: ${data.checkInDate || ''}</div>
+                                <div>المغادرة: ${data.checkOutDate || ''}</div>
+                            </td>
+                            <td class="p-3">${statusBadge}</td>
+                            <td class="p-3 text-center space-x-1 space-x-reverse">
+                                <button onclick="updateStatus('${id}', 'مؤكد')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">قبول</button>
+                                <button onclick="updateStatus('${id}', 'مرفوض')" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">رفض</button>
+                                <button onclick="extendBooking('${id}', '${data.checkOutDate}')" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">تمديد</button>
+                                <button onclick="deleteBooking('${id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+
+                document.getElementById('stat-total').innerText = total;
+                document.getElementById('stat-pending').innerText = pending;
+                document.getElementById('stat-confirmed').innerText = confirmed;
+            });
         }
 
-        function openBookingModal(roomId) {
-            const room = initialRoomsList.find(r => r.id === roomId);
-            document.getElementById('modalRoomId').value = room.id;
-            document.getElementById('modalRoomTitle').innerText = `حجز غرفة رقم ${room.number}`;
-            document.getElementById('bookingModal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        function calculateTotal() {
-            const roomId = parseInt(document.getElementById('modalRoomId').value);
-            const room = initialRoomsList.find(r => r.id === roomId);
-            const inDate = new Date(document.getElementById('checkIn').value);
-            const outDate = new Date(document.getElementById('checkOut').value);
-
-            if (inDate && outDate && outDate > inDate) {
-                const diffTime = Math.abs(outDate - inDate);
-                const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                const total = nights * room.price;
-                document.getElementById('calculatedTotal').innerText = `${total} $ (${nights} ليالي)`;
-                return total;
-            } else {
-                document.getElementById('calculatedTotal').innerText = `0 $`;
-                return 0;
+        // تحديث حالة الحجز (قبول/رفض)
+        window.updateStatus = async function(id, newStatus) {
+            try {
+                const docRef = doc(db, "booking", id);
+                await updateDoc(docRef, { status: newStatus });
+            } catch (error) {
+                console.error("خطأ في التحديث:", error);
+                alert('حدث خطأ أثناء تعديل الحالة.');
             }
         }
 
-        async function handleBookingSubmit(e) {
-            e.preventDefault();
-            const roomId = parseInt(document.getElementById('modalRoomId').value);
-            const room = initialRoomsList.find(r => r.id === roomId);
-            const name = document.getElementById('guestName').value;
-            const phone = document.getElementById('guestPhone').value;
-            const inDate = document.getElementById('checkIn').value;
-            const outDate = document.getElementById('checkOut').value;
-            const total = calculateTotal();
-
-            if (total <= 0) {
-                alert('يرجى تحديد تاريخ وصول ومغادرة صحيحين.');
-                return;
-            }
-
-            const newBooking = {
-                id: 'B' + Date.now().toString().slice(-6),
-                roomId: room.id,
-                roomNumber: room.number,
-                guestName: name,
-                guestPhone: phone,
-                checkIn: inDate,
-                checkOut: outDate,
-                totalPrice: total,
-                status: 'pending',
-                createdAt: new Date().toLocaleDateString('ar-EG')
-            };
-
-            localBookings.push(newBooking);
-            currentBookingSummary = newBooking;
-
-            await saveDataAndBroadcast();
-
-            closeModal('bookingModal');
-            document.getElementById('bookingForm').reset();
-            document.getElementById('successModal').classList.add('active');
-        }
-
-        function sendViaEmail() {
-            if (!currentBookingSummary) return;
-            const b = currentBookingSummary;
-            const subject = encodeURIComponent(`طلب حجز جديد - فندق المدينة - ${b.guestName}`);
-            const body = encodeURIComponent(
-                `تفاصيل طلب الحجز الجديد:\n` +
-                `- النزيل: ${b.guestName}\n` +
-                `- الهاتف: ${b.guestPhone}\n` +
-                `- الغرفة: ${b.roomNumber}\n` +
-                `- الوصول: ${b.checkIn}\n` +
-                `- المغادرة: ${b.checkOut}\n` +
-                `- التكلفة: ${b.totalPrice} $`
-            );
-            window.location.href = `mailto:${hotelEmail}?subject=${subject}&body=${body}`;
-        }
-
-        function sendViaWhatsapp() {
-            if (!currentBookingSummary) return;
-            const b = currentBookingSummary;
-            const text = encodeURIComponent(
-                `*طلب حجز جديد - فندق المدينة بورتسودان*\n` +
-                `النزيل: ${b.guestName}\n` +
-                `الهاتف: ${b.guestPhone}\n` +
-                `الغرفة: ${b.roomNumber}\n` +
-                `الوصول: ${b.checkIn}\n` +
-                `المغادرة: ${b.checkOut}\n` +
-                `المبلغ الإجمالي: ${b.totalPrice} $`
-            );
-            window.open(`https://wa.me/${hotelWhatsapp}?text=${text}`, '_blank');
-        }
-
-        function searchGuestBookings() {
-            const phone = document.getElementById('searchPhoneInput').value.trim();
-            const table = document.getElementById('guestBookingsTable');
-            const myBookings = localBookings.filter(b => b.guestPhone === phone);
-
-            if (myBookings.length === 0) {
-                table.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">لا توجد حجوزات مسجلة بهذا الرقم</td></tr>`;
-                return;
-            }
-
-            table.innerHTML = myBookings.map(b => `
-                <tr>
-                    <td>#${b.id}</td>
-                    <td>غرفة ${b.roomNumber}</td>
-                    <td>${b.checkIn}</td>
-                    <td>${b.checkOut}</td>
-                    <td>${b.totalPrice} $</td>
-                    <td><span class="badge badge-${b.status}">${b.status === 'pending' ? 'بانتظار موافقة المدير' : b.status === 'confirmed' ? 'مؤكد ومقبول' : 'مرفوض'}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        function openAdminModal() {
-            document.getElementById('adminModal').classList.add('active');
-        }
-
-        function verifyAdminPass() {
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === '1234') {
-                closeModal('adminModal');
-                switchTab('adminView');
-            } else {
-                alert('رمز الدخول غير صحيح! الرمز الافتراضي هو 1234');
-            }
-        }
-
-        function renderAdminDashboard() {
-            const table = document.getElementById('adminBookingsTable');
-            
-            const pending = localBookings.filter(b => b.status === 'pending').length;
-            const confirmed = localBookings.filter(b => b.status === 'confirmed').length;
-            const revenue = localBookings.filter(b => b.status === 'confirmed').reduce((acc, b) => acc + (b.totalPrice || 0), 0);
-
-            document.getElementById('statPending').innerText = pending;
-            document.getElementById('statConfirmed').innerText = confirmed;
-            document.getElementById('statRevenue').innerText = `${revenue} $`;
-
-            if (localBookings.length === 0) {
-                table.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">لا توجد طلبات حجز مسجلة حالياً</td></tr>`;
-                return;
-            }
-
-            table.innerHTML = localBookings.slice().reverse().map(b => `
-                <tr>
-                    <td><b>${b.guestName}</b></td>
-                    <td>${b.guestPhone}</td>
-                    <td>غرفة ${b.roomNumber}</td>
-                    <td>${b.checkIn} ➔ <b>${b.checkOut}</b></td>
-                    <td>${b.totalPrice} $</td>
-                    <td><span class="badge badge-${b.status}">${b.status === 'pending' ? 'معلق' : b.status === 'confirmed' ? 'مقبول' : 'مرفوض'}</span></td>
-                    <td>
-                        ${b.status === 'pending' ? `
-                            <button class="btn btn-success" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="updateBookingStatus('${b.id}', 'confirmed')">قبول</button>
-                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="updateBookingStatus('${b.id}', 'rejected')">رفض</button>
-                        ` : b.status === 'confirmed' ? `
-                            <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="openExtendModal('${b.id}')">تمديد الإقامة</button>
-                        ` : '-'}
-                        <button class="btn btn-danger" style="padding: 5px 8px; font-size: 0.8rem; display: inline-flex; width: auto;" onclick="deleteBooking('${b.id}')" title="حذف"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        async function updateBookingStatus(bookingId, status) {
-            const booking = localBookings.find(b => b.id === bookingId);
-            if (booking) {
-                booking.status = status;
-                await saveDataAndBroadcast();
-            }
-        }
-
-        async function deleteBooking(bookingId) {
-            localBookings = localBookings.filter(b => b.id !== bookingId);
-
-            if (supabaseClient && isSupabaseActive) {
+        // تمديد فترة الحجز (إضافة أيام لتاريخ المغادرة)
+        window.extendBooking = async function(id, currentCheckout) {
+            let extraDays = prompt("أدخل عدد الأيام المراد تمديدها للحجز:", "1");
+            if(extraDays && !isNaN(extraDays)) {
+                let date = new Date(currentCheckout);
+                date.setDate(date.getDate() + parseInt(extraDays));
+                let newCheckoutStr = date.toISOString().split('T')[0];
+                
                 try {
-                    await supabaseClient.from('bookings').delete().eq('id', bookingId);
-                } catch(e) {
-                    console.log('Supabase delete error:', e);
+                    const docRef = doc(db, "booking", id);
+                    await updateDoc(docRef, { checkOutDate: newCheckoutStr });
+                    alert('تم تمديد فترة الحجز بنجاح!');
+                } catch (error) {
+                    console.error("خطأ في التمديد:", error);
                 }
             }
-
-            await saveDataAndBroadcast();
         }
 
-        function openExtendModal(bookingId) {
-            const booking = localBookings.find(b => b.id === bookingId);
-            document.getElementById('extendBookingId').value = booking.id;
-            document.getElementById('newCheckOut').min = booking.checkOut;
-            document.getElementById('newCheckOut').value = booking.checkOut;
-            document.getElementById('extendModal').classList.add('active');
-        }
-
-        async function confirmExtendStay() {
-            const bookingId = document.getElementById('extendBookingId').value;
-            const newOutStr = document.getElementById('newCheckOut').value;
-            const booking = localBookings.find(b => b.id === bookingId);
-            const room = initialRoomsList.find(r => r.id === booking.roomId);
-
-            if (newOutStr && newOutStr > booking.checkOut) {
-                const oldOut = new Date(booking.checkOut);
-                const newOut = new Date(newOutStr);
-                const diffTime = Math.abs(newOut - oldOut);
-                const extraNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                const extraCost = extraNights * room.price;
-
-                booking.checkOut = newOutStr;
-                booking.totalPrice += extraCost;
-
-                await saveDataAndBroadcast();
-                closeModal('extendModal');
-            } else {
-                alert('يرجى تحديد تاريخ مغادرة أبعد من التاريخ الحالي.');
-            }
-        }
-
-        function openManualBookingModal() {
-            const select = document.getElementById('manualRoomSelect');
-            select.innerHTML = initialRoomsList.map(r => `<option value="${r.id}">غرفة ${r.number} - ${r.type} (${r.price} $)</option>`).join('');
-            document.getElementById('manualBookingModal').classList.add('active');
-        }
-
-        async function handleManualBookingSubmit(e) {
-            e.preventDefault();
-            const roomId = parseInt(document.getElementById('manualRoomSelect').value);
-            const room = initialRoomsList.find(r => r.id === roomId);
-            const name = document.getElementById('manualGuestName').value;
-            const phone = document.getElementById('manualGuestPhone').value;
-            const inDate = document.getElementById('manualCheckIn').value;
-            const outDate = document.getElementById('manualCheckOut').value;
-
-            const inD = new Date(inDate);
-            const outD = new Date(outDate);
-
-            if (!outD || outD <= inD) {
-                alert('يرجى اختيار تاريخ مغادرة صحيح.');
-                return;
-            }
-
-            const diffTime = Math.abs(outD - inD);
-            const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const total = nights * room.price;
-
-            const manualBooking = {
-                id: 'B' + Date.now().toString().slice(-6),
-                roomId: room.id,
-                roomNumber: room.number,
-                guestName: name,
-                guestPhone: phone,
-                checkIn: inDate,
-                checkOut: outDate,
-                totalPrice: total,
-                status: 'confirmed',
-                createdAt: new Date().toLocaleDateString('ar-EG')
-            };
-
-            localBookings.push(manualBooking);
-            await saveDataAndBroadcast();
-            closeModal('manualBookingModal');
-            document.getElementById('manualBookingForm').reset();
-        }
-
-        async function clearAllBookingsData() {
-            if (confirm('هل أنت تأكد من مسح جميع الحجوزات وإعادة تفريغ الغرف؟')) {
-                localBookings = [];
-                if (supabaseClient && isSupabaseActive) {
-                    try {
-                        await supabaseClient.from('bookings').delete().neq('id', '0');
-                    } catch(e) {
-                        console.log('Supabase clear error:', e);
-                    }
+        // حذف الحجوزات
+        window.deleteBooking = async function(id) {
+            if(confirm('هل أنت متأكد من حذف هذا الحجز نهائياً من قاعدة البيانات؟')) {
+                try {
+                    await deleteDoc(doc(db, "booking", id));
+                } catch (error) {
+                    console.error("خطأ في الحذف:", error);
+                    alert('تعذر حذف الحجز.');
                 }
-                await saveDataAndBroadcast();
             }
-        }
-
-        function saveHotelSettings() {
-            hotelEmail = document.getElementById('hotelEmailInput').value;
-            hotelWhatsapp = document.getElementById('hotelWhatsappInput').value;
-            localStorage.setItem('hotel_email', hotelEmail);
-            localStorage.setItem('hotel_whatsapp', hotelWhatsapp);
-            alert('تم حفظ إعدادات التواصل بنجاح!');
         }
     </script>
 </body>
